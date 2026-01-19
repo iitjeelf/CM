@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>LFJC Online Examination Platform</title>
+<title>LFJC Online Examination Platform - Admin & Student</title>
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -38,7 +38,6 @@
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ===== GLOBAL RESETS ===== */
 * {
   margin: 0;
   padding: 0;
@@ -54,776 +53,536 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ===== GITHUB DEPLOYMENT WARNING ===== */
-.github-warning {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #ff9800, #ff5722);
-  color: white;
-  padding: 15px 25px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-  z-index: 10001;
-  max-width: 90%;
-  width: 500px;
-  text-align: center;
-  animation: slideDown 0.5s ease;
+/* ===== LAYOUT ===== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.github-warning-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
+.hidden {
+  display: none !important;
 }
 
-.github-warning-text {
-  flex: 1;
-  text-align: left;
-}
-
-.github-warning-text h4 {
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.github-warning-text p {
-  font-size: 14px;
-  opacity: 0.9;
-  margin-bottom: 5px;
-}
-
-.github-deploy-btn {
+/* ===== ADMIN PANEL ===== */
+.admin-panel {
   background: white;
-  color: #ff5722;
-  border: none;
-  padding: 8px 15px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-weight: 600;
-  transition: var(--transition);
-  white-space: nowrap;
-}
-
-.github-deploy-btn:hover {
-  background: #f5f5f5;
-  transform: translateY(-2px);
-}
-
-.github-deploy-btn i {
-  margin-right: 5px;
-}
-
-/* ===== MICROPHONE TEST MODAL ===== */
-.microphone-test-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
-  backdrop-filter: blur(10px);
-}
-
-.microphone-test-box {
-  background: var(--card-bg);
   border-radius: var(--radius-xl);
-  width: 90%;
-  max-width: 500px;
-  padding: 30px;
-  box-shadow: var(--shadow-xl);
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.mic-test-header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.mic-test-header h3 {
-  color: var(--primary-color);
-  margin-bottom: 8px;
-}
-
-.mic-test-visualizer {
-  width: 100%;
-  height: 120px;
-  background: #1a1a2e;
-  border-radius: var(--radius-md);
-  margin: 20px 0;
-  position: relative;
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
 }
 
-.mic-level-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 0%;
-  background: linear-gradient(to top, #00C9A7, #36B37E);
-  transition: height 0.1s ease;
-}
-
-.mic-frequency-canvas {
-  width: 100%;
-  height: 100%;
-}
-
-.mic-test-controls {
+.admin-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 25px 30px;
   display: flex;
-  gap: 10px;
-  margin: 20px 0;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.mic-test-btn {
-  flex: 1;
-  padding: 12px;
+.admin-tabs {
+  display: flex;
+  background: var(--light-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+  padding: 18px 30px;
+  background: none;
   border: none;
-  border-radius: var(--radius-md);
+  font-size: 16px;
   font-weight: 600;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-#startMicTest {
-  background: var(--success-color);
-  color: white;
-}
-
-#startMicTest:hover:not(:disabled) {
-  background: #2a8f66;
-  transform: translateY(-2px);
-}
-
-#stopMicTest {
-  background: var(--danger-color);
-  color: white;
-}
-
-#stopMicTest:hover:not(:disabled) {
-  background: #d9371c;
-  transform: translateY(-2px);
-}
-
-.mic-test-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.mic-volume-display {
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 15px 0;
-}
-
-.mic-volume-level {
-  color: var(--success-color);
-  font-size: 24px;
-}
-
-.mic-troubleshooting {
-  background: #FFF3CD;
-  border: 1px solid #FFEAA7;
-  border-radius: var(--radius-md);
-  padding: 15px;
-  margin: 20px 0;
-}
-
-.mic-troubleshooting h4 {
-  color: #856404;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.mic-troubleshooting ul {
-  list-style: none;
-  padding-left: 5px;
-}
-
-.mic-troubleshooting li {
-  margin-bottom: 8px;
-  padding-left: 20px;
   position: relative;
 }
 
-.mic-troubleshooting li:before {
-  content: "•";
-  color: #856404;
+.tab-btn.active {
+  color: var(--primary-color);
+}
+
+.tab-btn.active::after {
+  content: '';
   position: absolute;
+  bottom: -1px;
   left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--primary-color);
 }
 
-.mic-device-list {
-  background: var(--light-bg);
-  border-radius: var(--radius-md);
-  padding: 15px;
-  margin: 15px 0;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.device-item {
-  padding: 10px;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 14px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.device-item:hover {
+.tab-btn:hover:not(.active) {
   background: rgba(46, 91, 255, 0.05);
 }
 
-.device-item:last-child {
-  border-bottom: none;
+.tab-content {
+  padding: 30px;
+  display: none;
 }
 
-.device-label {
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== QUESTION BANK ===== */
+.question-bank {
+  background: var(--light-bg);
+  border-radius: var(--radius-lg);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.question-type-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.type-btn {
+  padding: 10px 20px;
+  border: 2px solid var(--border-color);
+  background: white;
+  border-radius: var(--radius-md);
+  cursor: pointer;
   font-weight: 600;
-  color: var(--text-primary);
+  transition: var(--transition);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.device-id {
-  font-size: 12px;
-  color: var(--text-secondary);
-  word-break: break-all;
-  margin-top: 4px;
-}
-
-.mic-test-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-#skipMicTest {
-  background: var(--text-light);
-  color: var(--text-primary);
-}
-
-#retryMicTest {
+.type-btn.active {
+  border-color: var(--primary-color);
   background: var(--primary-color);
   color: white;
 }
 
-/* ===== CAMERA TEST MODAL ===== */
-.camera-test-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
-  backdrop-filter: blur(10px);
-}
-
-.camera-test-box {
-  background: var(--card-bg);
-  border-radius: var(--radius-xl);
-  width: 90%;
-  max-width: 600px;
-  padding: 30px;
-  box-shadow: var(--shadow-xl);
-  animation: slideDown 0.3s ease;
-}
-
-.camera-test-header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.camera-test-header h3 {
-  color: var(--primary-color);
-  margin-bottom: 8px;
-}
-
-.camera-preview-container {
-  width: 100%;
-  height: 300px;
-  background: #1a1a2e;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  margin: 20px 0;
-  position: relative;
-}
-
-#cameraPreview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.camera-status {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-}
-
-.camera-controls {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.camera-test-btn {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-#startCameraTest {
-  background: var(--success-color);
-  color: white;
-}
-
-#startCameraTest:hover:not(:disabled) {
-  background: #2a8f66;
-  transform: translateY(-2px);
-}
-
-#stopCameraTest {
-  background: var(--danger-color);
-  color: white;
-}
-
-#stopCameraTest:hover:not(:disabled) {
-  background: #d9371c;
-  transform: translateY(-2px);
-}
-
-.camera-device-list {
-  background: var(--light-bg);
-  border-radius: var(--radius-md);
-  padding: 15px;
-  margin: 15px 0;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.camera-device-item {
-  padding: 10px;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 14px;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.camera-device-item:hover {
+.type-btn:hover:not(.active) {
+  border-color: var(--primary-color);
   background: rgba(46, 91, 255, 0.05);
 }
 
-.camera-device-item:last-child {
-  border-bottom: none;
+.question-editor {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 25px;
+  border: 1px solid var(--border-color);
 }
 
-/* ===== SYSTEM CHECK SCREEN ===== */
-#systemCheckScreen {
-  display: none;
-  min-height: 100vh;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  padding: 40px 20px;
+.editor-field {
+  margin-bottom: 20px;
 }
 
-.system-check-container {
-  max-width: 600px;
-  margin: 0 auto;
-  background: var(--card-bg);
-  border-radius: var(--radius-xl);
-  padding: 40px;
-  box-shadow: var(--shadow-xl);
+.editor-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
-.checklist {
-  margin: 32px 0;
-}
-
-.check-item {
-  display: flex;
-  align-items: center;
-  padding: 16px;
+.editor-field input[type="text"],
+.editor-field textarea,
+.editor-field select {
+  width: 100%;
+  padding: 12px 16px;
   border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
-  margin-bottom: 12px;
+  font-size: 16px;
   transition: var(--transition);
-  cursor: pointer;
 }
 
-.check-item:hover {
+.editor-field input[type="text"]:focus,
+.editor-field textarea:focus,
+.editor-field select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.editor-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.option-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.option-row input {
+  flex: 1;
+}
+
+.remove-option {
+  background: var(--danger-color);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-option {
+  background: var(--success-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* ===== DRAG & DROP AREAS ===== */
+.drag-drop-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.drag-items-container,
+.drop-targets-container {
+  background: var(--light-bg);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  min-height: 300px;
+}
+
+.drag-items-container h4,
+.drop-targets-container h4 {
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drag-item {
+  background: white;
+  padding: 15px;
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  cursor: move;
+  border: 2px solid var(--border-color);
+  transition: var(--transition);
+  user-select: none;
+}
+
+.drag-item:hover {
   border-color: var(--primary-color);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
-.check-item:last-child {
-  margin-bottom: 0;
+.drag-item.dragging {
+  opacity: 0.5;
 }
 
-.check-item.passed {
+.drop-target {
+  background: white;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 15px;
+  border: 2px dashed var(--border-color);
+  min-height: 80px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.drop-target h5 {
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.drop-target.over {
   border-color: var(--success-color);
   background: rgba(54, 179, 126, 0.05);
 }
 
-.check-item.failed {
-  border-color: var(--danger-color);
-  background: rgba(255, 86, 48, 0.05);
+.drop-target.filled {
+  border-style: solid;
+  border-color: var(--primary-color);
 }
 
-.check-item.failed:hover {
-  border-color: var(--warning-color);
+.dropped-item {
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 15px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
 }
 
-.check-item.testing {
+.remove-dropped {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 5px;
+}
+
+/* ===== COPY-PASTE QUESTIONS ===== */
+.bulk-upload-area {
+  background: var(--light-bg);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 40px 20px;
+  text-align: center;
+  margin: 20px 0;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.bulk-upload-area:hover {
   border-color: var(--primary-color);
   background: rgba(46, 91, 255, 0.05);
 }
 
-.check-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--light-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 16px;
-  flex-shrink: 0;
-  transition: var(--transition);
+.bulk-upload-area.over {
+  border-color: var(--success-color);
+  background: rgba(54, 179, 126, 0.1);
 }
 
-.check-item.passed .check-icon {
-  background: var(--success-color);
-  color: white;
-}
-
-.check-item.failed .check-icon {
-  background: var(--danger-color);
-  color: white;
-}
-
-.check-item.testing .check-icon {
-  background: var(--primary-color);
-  color: white;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.check-content {
-  flex: 1;
-}
-
-.check-title {
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.check-description {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.check-status {
-  font-weight: 600;
-  font-size: 14px;
-  min-width: 100px;
-  text-align: right;
-}
-
-.check-item.passed .check-status {
-  color: var(--success-color);
-}
-
-.check-item.failed .check-status {
-  color: var(--danger-color);
-}
-
-.check-item.testing .check-status {
+.upload-icon {
+  font-size: 48px;
   color: var(--primary-color);
+  margin-bottom: 15px;
 }
 
-/* ===== TOAST NOTIFICATIONS ===== */
-.toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-}
-
-.toast {
-  background: var(--card-bg);
-  border-radius: var(--radius-md);
-  padding: 15px 20px;
-  margin-bottom: 10px;
-  box-shadow: var(--shadow-lg);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 300px;
-  max-width: 400px;
-  animation: slideInRight 0.3s ease;
-  border-left: 4px solid var(--primary-color);
-}
-
-.toast.success {
-  border-left-color: var(--success-color);
-}
-
-.toast.error {
-  border-left-color: var(--danger-color);
-}
-
-.toast.warning {
-  border-left-color: var(--warning-color);
-}
-
-@keyframes slideInRight {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideOutRight {
-  from { transform: translateX(0); opacity: 1; }
-  to { transform: translateX(100%); opacity: 0; }
-}
-
-.toast-icon {
-  font-size: 20px;
-}
-
-.toast.success .toast-icon {
-  color: var(--success-color);
-}
-
-.toast.error .toast-icon {
-  color: var(--danger-color);
-}
-
-.toast.warning .toast-icon {
-  color: var(--warning-color);
-}
-
-.toast-content {
-  flex: 1;
-}
-
-.toast-title {
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.toast-message {
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.toast-close {
-  background: none;
-  border: none;
-  color: var(--text-light);
-  cursor: pointer;
-  font-size: 18px;
-  padding: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ===== ACCESS DENIED SCREEN ===== */
-.access-denied {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  z-index: 10000;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  text-align: center;
-  padding: 20px;
-}
-
-.access-denied h1 {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
-.access-code-input {
-  padding: 15px 20px;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  width: 300px;
-  text-align: center;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow-md);
-  color: var(--text-primary);
-}
-
-.verify-btn {
+.paste-box {
   background: white;
-  color: var(--primary-color);
-  border: none;
-  padding: 15px 40px;
-  font-size: 16px;
+  border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
-  cursor: pointer;
-  font-weight: 600;
-  transition: var(--transition);
-  box-shadow: var(--shadow-md);
+  padding: 20px;
+  margin-top: 20px;
+  min-height: 200px;
 }
 
-.verify-btn:hover {
-  transform: translateY(-2px);
+.paste-box:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.questions-preview {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
+.question-preview-item {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== EXAM INTERFACE ===== */
+.exam-interface {
+  background: white;
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
+  overflow: hidden;
 }
 
-.access-error {
-  color: #FFD700;
-  margin-top: 15px;
-  font-weight: 600;
-  display: none;
-  background: rgba(255, 0, 0, 0.2);
+.exam-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timer {
+  font-size: 24px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.2);
   padding: 10px 20px;
   border-radius: var(--radius-md);
-  animation: shake 0.5s;
 }
 
-.github-deployment-info {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin-top: 30px;
-  max-width: 500px;
-  text-align: left;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.github-deployment-info h3 {
-  color: white;
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.github-deployment-info ol {
-  margin-left: 20px;
-  margin-bottom: 20px;
-}
-
-.github-deployment-info li {
-  margin-bottom: 10px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.github-deployment-info code {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: monospace;
-  color: #FFD700;
-}
-
-.github-action-buttons {
+.question-navigation {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
+  background: var(--light-bg);
+  padding: 15px 30px;
+  overflow-x: auto;
 }
 
-.github-btn {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: var(--radius-md);
+.question-nav-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border-color);
+  background: white;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
   font-weight: 600;
+  transition: var(--transition);
+}
+
+.question-nav-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.question-nav-btn.answered {
+  background: var(--success-color);
+  color: white;
+  border-color: var(--success-color);
+}
+
+.question-nav-btn.marked {
+  background: var(--warning-color);
+  color: white;
+  border-color: var(--warning-color);
+}
+
+.question-content {
+  padding: 30px;
+  min-height: 500px;
+}
+
+.question-text {
+  font-size: 18px;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.options-container {
+  margin: 25px 0;
+}
+
+.option-label {
+  display: block;
+  background: var(--light-bg);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 15px 20px;
+  margin-bottom: 12px;
   cursor: pointer;
   transition: var(--transition);
+  position: relative;
+}
+
+.option-label:hover {
+  border-color: var(--primary-color);
+  transform: translateX(5px);
+}
+
+.option-label.selected {
+  border-color: var(--primary-color);
+  background: rgba(46, 91, 255, 0.05);
+}
+
+.option-label input {
+  display: none;
+}
+
+.option-text {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.option-letter {
+  width: 30px;
+  height: 30px;
+  background: var(--border-color);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  font-weight: 600;
 }
 
-.github-btn-primary {
-  background: white;
-  color: #24292e;
-}
-
-.github-btn-primary:hover {
-  background: #f0f0f0;
-  transform: translateY(-2px);
-}
-
-.github-btn-secondary {
-  background: transparent;
+.option-label.selected .option-letter {
+  background: var(--primary-color);
   color: white;
-  border: 2px solid white;
 }
 
-.github-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
+/* ===== EXAM DRAG & DROP ===== */
+.exam-drag-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin: 30px 0;
+}
+
+.exam-drag-items {
+  background: var(--light-bg);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.exam-drop-zones {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.exam-drop-zone {
+  background: white;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 25px;
+  min-height: 120px;
+  transition: var(--transition);
+}
+
+.exam-drop-zone.over {
+  border-color: var(--primary-color);
+  background: rgba(46, 91, 255, 0.05);
+}
+
+.exam-drop-zone.filled {
+  border-style: solid;
+}
+
+.exam-drag-item {
+  background: white;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: move;
+  user-select: none;
+  transition: var(--transition);
+}
+
+.exam-drag-item:hover {
+  border-color: var(--primary-color);
   transform: translateY(-2px);
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+.exam-drag-item.dragging {
+  opacity: 0.5;
 }
 
 /* ===== BUTTONS ===== */
@@ -878,369 +637,597 @@ body {
   color: white;
 }
 
+.btn-warning {
+  background: var(--warning-color);
+  color: white;
+}
+
 .btn-full {
   width: 100%;
 }
 
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ===== MODALS ===== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(10px);
+}
+
+.modal-content {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  box-shadow: var(--shadow-xl);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--light-bg);
+}
+
+.modal-title {
+  font-size: 24px;
+  color: var(--text-primary);
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* ===== TOAST NOTIFICATIONS ===== */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.toast {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 300px;
+  max-width: 400px;
+  animation: slideInRight 0.3s ease;
+  border-left: 4px solid var(--primary-color);
+}
+
+.toast.success {
+  border-left-color: var(--success-color);
+}
+
+.toast.error {
+  border-left-color: var(--danger-color);
+}
+
+.toast.warning {
+  border-left-color: var(--warning-color);
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .system-check-container,
-  .microphone-test-box,
-  .camera-test-box {
-    padding: 20px;
+  .container {
+    padding: 10px;
   }
   
-  .access-code-input {
-    width: 100%;
-    max-width: 300px;
+  .admin-tabs {
+    flex-wrap: wrap;
   }
   
-  .mic-test-controls,
-  .camera-controls {
-    flex-direction: column;
-  }
-  
-  .access-denied h1 {
-    font-size: 2em;
-  }
-  
-  .github-deployment-info {
-    margin: 20px;
-    padding: 15px;
-  }
-  
-  .github-action-buttons {
-    flex-direction: column;
-  }
-  
-  .github-warning {
-    width: 95%;
+  .tab-btn {
     padding: 12px 15px;
+    font-size: 14px;
   }
   
-  .github-warning-content {
-    flex-direction: column;
-    text-align: center;
+  .drag-drop-container,
+  .exam-drag-container {
+    grid-template-columns: 1fr;
   }
   
-  .github-warning-text {
-    text-align: center;
+  .question-navigation {
+    padding: 10px;
   }
   
-  .camera-preview-container {
-    height: 200px;
+  .question-nav-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+  
+  .modal-content {
+    padding: 20px;
   }
 }
 </style>
 </head>
-
 <body>
-
-<!-- GitHub Deployment Warning -->
-<div id="githubWarning" class="github-warning" style="display: none;">
-  <div class="github-warning-content">
-    <div class="github-warning-text">
-      <h4><i class="fas fa-exclamation-triangle"></i> Camera/Microphone Access Required</h4>
-      <p id="warningMessage">This platform requires camera and microphone access for proctoring.</p>
-      <p style="font-size: 12px;">Upload to GitHub Pages to enable these features.</p>
-    </div>
-    <button id="deployToGitHubBtn" class="github-deploy-btn">
-      <i class="fab fa-github"></i> Deploy Now
-    </button>
-  </div>
-</div>
-
-<!-- Microphone Test Modal -->
-<div id="microphoneTestModal" class="microphone-test-modal">
-  <div class="microphone-test-box">
-    <div class="mic-test-header">
-      <h3><i class="fas fa-microphone"></i> Microphone Test</h3>
-      <p>Please speak to test your microphone</p>
-    </div>
-    
-    <div class="mic-test-visualizer">
-      <div id="micLevelIndicator" class="mic-level-indicator"></div>
-      <canvas id="micFrequencyCanvas" class="mic-frequency-canvas"></canvas>
-    </div>
-    
-    <div class="mic-volume-display">
-      Volume: <span id="micVolumeLevel" class="mic-volume-level">0%</span>
-    </div>
-    
-    <div class="mic-test-controls">
-      <button id="startMicTest" class="mic-test-btn">
-        <i class="fas fa-play"></i> Start Test
-      </button>
-      <button id="stopMicTest" class="mic-test-btn" disabled>
-        <i class="fas fa-stop"></i> Stop Test
-      </button>
-    </div>
-    
-    <div class="mic-troubleshooting">
-      <h4><i class="fas fa-tools"></i> Troubleshooting Tips</h4>
-      <ul>
-        <li>Make sure headphones are properly plugged in</li>
-        <li>Check if microphone is muted (look for mute button)</li>
-        <li>Speak closer to the microphone</li>
-        <li>Ensure browser has microphone permission</li>
-        <li>Try unplugging and reconnecting headphones</li>
-      </ul>
-    </div>
-    
-    <div id="micDeviceList" class="mic-device-list">
-      <h4>Detected Microphones:</h4>
-      <div id="deviceItemsContainer"></div>
-    </div>
-    
-    <div class="mic-test-actions">
-      <button id="skipMicTest" class="btn btn-secondary btn-full">
-        <i class="fas fa-forward"></i> Skip Test
-      </button>
-      <button id="retryMicTest" class="btn btn-primary btn-full">
-        <i class="fas fa-redo"></i> Retry Detection
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Camera Test Modal -->
-<div id="cameraTestModal" class="camera-test-modal">
-  <div class="camera-test-box">
-    <div class="camera-test-header">
-      <h3><i class="fas fa-video"></i> Camera Test</h3>
-      <p>Check if your camera is working properly</p>
-    </div>
-    
-    <div class="camera-preview-container">
-      <video id="cameraPreview" autoplay playsinline></video>
-      <div id="cameraStatus" class="camera-status">Camera off</div>
-    </div>
-    
-    <div class="camera-controls">
-      <button id="startCameraTest" class="camera-test-btn">
-        <i class="fas fa-play"></i> Start Camera
-      </button>
-      <button id="stopCameraTest" class="camera-test-btn" disabled>
-        <i class="fas fa-stop"></i> Stop Camera
-      </button>
-    </div>
-    
-    <div id="cameraDeviceList" class="camera-device-list">
-      <h4>Detected Cameras:</h4>
-      <div id="cameraItemsContainer"></div>
-    </div>
-    
-    <div class="mic-test-actions">
-      <button id="skipCameraTest" class="btn btn-secondary btn-full">
-        <i class="fas fa-forward"></i> Skip Test
-      </button>
-      <button id="retryCameraTest" class="btn btn-primary btn-full">
-        <i class="fas fa-redo"></i> Switch Camera
-      </button>
-    </div>
-  </div>
-</div>
 
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Access Denied Screen -->
-<div id="accessDenied" class="access-denied">
-    <h1>LFJC ONLINE EXAMINATION</h1>
-    <p style="font-size: 1.2em; margin: 10px 0;">TOTAL 75 QUESTIONS</p>
-    <p style="margin: 5px 0;">• Maths: 20 (MCQ), 5 (Numerical Input)</p>
-    <p style="margin: 5px 0;">• Physics: 20 (MCQ), 5 (Numerical Input)</p>
-    <p style="margin: 5px 0;">• Chemistry: 20 (MCQ), 5 (Numerical Input)</p>
-    <p style="margin: 10px 0; font-weight: bold;">CORRECT ANSWER + 4 MARKS</p>
-    <p style="margin: 5px 0; font-weight: bold;">WRONG ANSWER -1 MARK</p>
+<!-- Admin Panel -->
+<div id="adminPanel" class="container hidden">
+  <div class="admin-panel">
+    <div class="admin-header">
+      <div>
+        <h1><i class="fas fa-user-shield"></i> LFJC Exam Admin Panel</h1>
+        <p>Create and manage examination questions</p>
+      </div>
+      <button id="logoutBtn" class="btn btn-secondary">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
     
-    <input type="password" id="accessCode" class="access-code-input" placeholder="Enter Access Code (lfjc2025)">
-    <button id="verifyAccess" class="verify-btn">VERIFY ACCESS</button>
-    <div id="accessError" class="access-error">❌ Invalid access code. Please try again.</div>
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-tab="create-tab">
+        <i class="fas fa-plus-circle"></i> Create Questions
+      </button>
+      <button class="tab-btn" data-tab="bank-tab">
+        <i class="fas fa-database"></i> Question Bank
+      </button>
+      <button class="tab-btn" data-tab="bulk-tab">
+        <i class="fas fa-paste"></i> Bulk Upload
+      </button>
+      <button class="tab-btn" data-tab="exam-tab">
+        <i class="fas fa-eye"></i> Preview Exam
+      </button>
+    </div>
     
-    <!-- GitHub Deployment Instructions -->
-    <div class="github-deployment-info">
-      <h3><i class="fab fa-github"></i> Deploy on GitHub Pages</h3>
-      <ol>
-        <li>Create repository on GitHub</li>
-        <li>Upload this file as <code>index.html</code></li>
-        <li>Go to Settings → Pages → Select "main" branch</li>
-        <li>Access via: <code>https://username.github.io/repository/</code></li>
-      </ol>
-      <div class="github-action-buttons">
-        <button id="openGitHubBtn" class="github-btn github-btn-primary">
-          <i class="fab fa-github"></i> Create GitHub Repository
-        </button>
-        <button id="learnMoreBtn" class="github-btn github-btn-secondary">
-          <i class="fas fa-book"></i> Learn More
-        </button>
+    <!-- Create Questions Tab -->
+    <div id="create-tab" class="tab-content active">
+      <div class="question-bank">
+        <h3><i class="fas fa-edit"></i> Create New Question</h3>
+        
+        <div class="question-type-selector">
+          <button class="type-btn active" data-type="mcq">
+            <i class="fas fa-list-ul"></i> Multiple Choice
+          </button>
+          <button class="type-btn" data-type="dragdrop">
+            <i class="fas fa-arrows-alt"></i> Drag & Drop
+          </button>
+          <button class="type-btn" data-type="numerical">
+            <i class="fas fa-calculator"></i> Numerical
+          </button>
+          <button class="type-btn" data-type="truefalse">
+            <i class="fas fa-check-circle"></i> True/False
+          </button>
+        </div>
+        
+        <!-- MCQ Question Editor -->
+        <div id="mcq-editor" class="question-editor">
+          <div class="editor-field">
+            <label><i class="fas fa-question-circle"></i> Question Text</label>
+            <textarea id="mcqQuestion" placeholder="Enter your question here..."></textarea>
+          </div>
+          
+          <div class="editor-field">
+            <label><i class="fas fa-tag"></i> Subject</label>
+            <select id="mcqSubject">
+              <option value="maths">Mathematics</option>
+              <option value="physics">Physics</option>
+              <option value="chemistry">Chemistry</option>
+              <option value="general">General</option>
+            </select>
+          </div>
+          
+          <div class="editor-field">
+            <label><i class="fas fa-star"></i> Difficulty</label>
+            <select id="mcqDifficulty">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+          
+          <div class="editor-field">
+            <label><i class="fas fa-list-ol"></i> Options (Select correct answer)</label>
+            <div id="mcqOptions">
+              <div class="option-row">
+                <input type="radio" name="correctAnswer" value="0">
+                <input type="text" class="option-input" placeholder="Option A">
+                <button class="remove-option"><i class="fas fa-times"></i></button>
+              </div>
+              <div class="option-row">
+                <input type="radio" name="correctAnswer" value="1">
+                <input type="text" class="option-input" placeholder="Option B">
+                <button class="remove-option"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+            <button id="addOptionBtn" class="add-option">
+              <i class="fas fa-plus"></i> Add Option
+            </button>
+          </div>
+          
+          <div class="editor-field">
+            <label><i class="fas fa-comment"></i> Explanation (Optional)</label>
+            <textarea id="mcqExplanation" placeholder="Explain the correct answer..."></textarea>
+          </div>
+          
+          <div class="btn-group">
+            <button id="saveMcqBtn" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Question
+            </button>
+            <button id="clearFormBtn" class="btn btn-secondary">
+              <i class="fas fa-redo"></i> Clear Form
+            </button>
+          </div>
+        </div>
+        
+        <!-- Drag & Drop Question Editor -->
+        <div id="dragdrop-editor" class="question-editor hidden">
+          <div class="editor-field">
+            <label><i class="fas fa-question-circle"></i> Question Text</label>
+            <textarea id="ddQuestion" placeholder="Drag items to match the correct pairs..."></textarea>
+          </div>
+          
+          <div class="editor-field">
+            <label><i class="fas fa-tag"></i> Subject</label>
+            <select id="ddSubject">
+              <option value="maths">Mathematics</option>
+              <option value="physics">Physics</option>
+              <option value="chemistry">Chemistry</option>
+            </select>
+          </div>
+          
+          <div class="drag-drop-container">
+            <div class="drag-items-container">
+              <h4><i class="fas fa-arrows-alt"></i> Drag Items</h4>
+              <div id="dragItemsList">
+                <div class="drag-item" draggable="true" data-id="1">Item 1</div>
+                <div class="drag-item" draggable="true" data-id="2">Item 2</div>
+                <div class="drag-item" draggable="true" data-id="3">Item 3</div>
+              </div>
+              <div class="editor-field" style="margin-top: 15px;">
+                <input type="text" id="newDragItem" placeholder="Add new drag item...">
+                <button id="addDragItemBtn" class="btn btn-secondary" style="margin-top: 10px;">
+                  <i class="fas fa-plus"></i> Add Item
+                </button>
+              </div>
+            </div>
+            
+            <div class="drop-targets-container">
+              <h4><i class="fas fa-bullseye"></i> Drop Targets</h4>
+              <div id="dropTargetsList">
+                <div class="drop-target" data-target-id="1">
+                  <h5>Target 1</h5>
+                </div>
+                <div class="drop-target" data-target-id="2">
+                  <h5>Target 2</h5>
+                </div>
+                <div class="drop-target" data-target-id="3">
+                  <h5>Target 3</h5>
+                </div>
+              </div>
+              <div class="editor-field" style="margin-top: 15px;">
+                <input type="text" id="newTargetLabel" placeholder="Add new target label...">
+                <button id="addTargetBtn" class="btn btn-secondary" style="margin-top: 10px;">
+                  <i class="fas fa-plus"></i> Add Target
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div id="dragDropMatches" style="margin-top: 20px; padding: 15px; background: #f8f9fc; border-radius: 8px;">
+            <h4><i class="fas fa-link"></i> Correct Matches</h4>
+            <div id="matchesList"></div>
+          </div>
+          
+          <div class="btn-group">
+            <button id="saveDDBtn" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Drag & Drop Question
+            </button>
+          </div>
+        </div>
       </div>
     </div>
+    
+    <!-- Question Bank Tab -->
+    <div id="bank-tab" class="tab-content">
+      <div class="question-bank">
+        <h3><i class="fas fa-database"></i> Question Bank</h3>
+        
+        <div class="filter-bar" style="margin-bottom: 20px; display: flex; gap: 10px;">
+          <select id="filterSubject" class="editor-field" style="flex: 1;">
+            <option value="">All Subjects</option>
+            <option value="maths">Mathematics</option>
+            <option value="physics">Physics</option>
+            <option value="chemistry">Chemistry</option>
+          </select>
+          <select id="filterType" class="editor-field" style="flex: 1;">
+            <option value="">All Types</option>
+            <option value="mcq">Multiple Choice</option>
+            <option value="dragdrop">Drag & Drop</option>
+            <option value="numerical">Numerical</option>
+          </select>
+          <button id="filterBtn" class="btn btn-primary">
+            <i class="fas fa-filter"></i> Filter
+          </button>
+          <button id="exportBtn" class="btn btn-success">
+            <i class="fas fa-download"></i> Export
+          </button>
+        </div>
+        
+        <div id="questionsList" style="max-height: 500px; overflow-y: auto;">
+          <!-- Questions will be loaded here -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bulk Upload Tab -->
+    <div id="bulk-tab" class="tab-content">
+      <div class="question-bank">
+        <h3><i class="fas fa-paste"></i> Bulk Question Upload</h3>
+        
+        <div class="editor-field">
+          <label><i class="fas fa-info-circle"></i> Format Instructions</label>
+          <div style="background: #f0f7ff; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <p><strong>Supported formats:</strong></p>
+            <p>1. <strong>CSV Format:</strong> question,option1,option2,option3,option4,correct_answer,subject,difficulty</p>
+            <p>2. <strong>Text Format:</strong> One question per line with options separated by |</p>
+            <p>3. <strong>Copy from Word/Excel:</strong> Simply copy and paste your questions</p>
+          </div>
+        </div>
+        
+        <div id="bulkUploadArea" class="bulk-upload-area">
+          <div class="upload-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+          </div>
+          <h4>Drag & Drop CSV/TXT files here</h4>
+          <p>or click to browse files</p>
+          <p style="font-size: 14px; color: var(--text-secondary); margin-top: 10px;">
+            You can also copy questions from Excel/Word and paste below
+          </p>
+          <input type="file" id="fileInput" accept=".csv,.txt" hidden>
+        </div>
+        
+        <div class="editor-field">
+          <label><i class="fas fa-paste"></i> Or Paste Questions Here:</label>
+          <div 
+            id="pasteBox" 
+            class="paste-box" 
+            contenteditable="true"
+            placeholder="Paste your questions here... (Copy from Excel, Word, or type directly)"
+          ></div>
+        </div>
+        
+        <div id="questionsPreview" class="questions-preview hidden">
+          <h4><i class="fas fa-eye"></i> Preview (First 5 questions)</h4>
+          <div id="previewContent"></div>
+        </div>
+        
+        <div class="btn-group">
+          <button id="parseQuestionsBtn" class="btn btn-primary">
+            <i class="fas fa-cogs"></i> Parse Questions
+          </button>
+          <button id="saveBulkBtn" class="btn btn-success" disabled>
+            <i class="fas fa-save"></i> Save All Questions
+          </button>
+          <button id="clearBulkBtn" class="btn btn-secondary">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Preview Exam Tab -->
+    <div id="exam-tab" class="tab-content">
+      <div class="question-bank">
+        <h3><i class="fas fa-eye"></i> Exam Preview</h3>
+        
+        <div class="btn-group" style="margin-bottom: 20px;">
+          <button id="generateExamBtn" class="btn btn-primary">
+            <i class="fas fa-random"></i> Generate Sample Exam
+          </button>
+          <button id="startPreviewBtn" class="btn btn-success">
+            <i class="fas fa-play"></i> Start Preview
+          </button>
+        </div>
+        
+        <div id="examPreviewArea">
+          <!-- Exam will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- System Check Screen -->
-<div id="systemCheckScreen">
-  <div class="system-check-container">
-    <div style="text-align: center; margin-bottom: 30px;">
-      <h2 style="color: var(--primary-color); margin-bottom: 10px;">
-        <i class="fas fa-shield-alt"></i> System Requirements Check
-      </h2>
-      <p style="color: var(--text-secondary);">Ensuring your system meets all requirements</p>
-    </div>
-    
-    <div class="checklist">
-      <div class="check-item" id="browserCheckItem">
-        <div class="check-icon">
-          <i class="fas fa-globe"></i>
-        </div>
-        <div class="check-content">
-          <div class="check-title">Web Browser Compatibility</div>
-          <div class="check-description">Chrome 80+ recommended for best experience</div>
-        </div>
-        <div class="check-status">Checking...</div>
+<!-- Exam Interface -->
+<div id="examInterface" class="container hidden">
+  <div class="exam-interface">
+    <div class="exam-header">
+      <div>
+        <h2><i class="fas fa-graduation-cap"></i> LFJC Online Examination</h2>
+        <p>Total Questions: 75 | Time: 180 minutes</p>
       </div>
-      
-      <div class="check-item" id="deploymentCheckItem">
-        <div class="check-icon">
-          <i class="fab fa-github"></i>
-        </div>
-        <div class="check-content">
-          <div class="check-title">GitHub Pages Deployment</div>
-          <div class="check-description">Required for camera/microphone access</div>
-        </div>
-        <div class="check-status">Checking...</div>
-      </div>
-      
-      <div class="check-item" id="cameraCheckItem">
-        <div class="check-icon">
-          <i class="fas fa-video"></i>
-        </div>
-        <div class="check-content">
-          <div class="check-title">Camera Access</div>
-          <div class="check-description">Required for identity verification</div>
-        </div>
-        <div class="check-status">Checking...</div>
-      </div>
-      
-      <div class="check-item" id="micCheckItem">
-        <div class="check-icon">
-          <i class="fas fa-microphone"></i>
-        </div>
-        <div class="check-content">
-          <div class="check-title">Microphone Access</div>
-          <div class="check-description">Required for audio monitoring</div>
-        </div>
-        <div class="check-status">Checking...</div>
-      </div>
-      
-      <div class="check-item" id="networkCheckItem">
-        <div class="check-icon">
-          <i class="fas fa-wifi"></i>
-        </div>
-        <div class="check-content">
-          <div class="check-title">Network Stability</div>
-          <div class="check-description">Minimum 1 Mbps required</div>
-        </div>
-        <div class="check-status">Checking...</div>
+      <div class="timer" id="timer">
+        03:00:00
       </div>
     </div>
     
-    <div style="display: flex; gap: 15px; margin-top: 30px;">
-      <button id="goBackFromCheck" class="btn btn-secondary" style="flex: 1;">
-        <i class="fas fa-arrow-left"></i> Back
-      </button>
-      <button id="proceedToRegistration" class="btn btn-primary" style="flex: 1;" disabled>
-        Continue <i class="fas fa-arrow-right"></i>
-      </button>
+    <div class="question-navigation" id="questionNav">
+      <!-- Navigation buttons will be generated here -->
+    </div>
+    
+    <div class="question-content" id="questionContent">
+      <!-- Question content will be loaded here -->
+    </div>
+    
+    <div style="padding: 20px 30px; background: var(--light-bg); border-top: 1px solid var(--border-color);">
+      <div class="btn-group">
+        <button id="prevQuestionBtn" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Previous
+        </button>
+        <button id="markQuestionBtn" class="btn btn-warning">
+          <i class="far fa-bookmark"></i> Mark for Review
+        </button>
+        <button id="nextQuestionBtn" class="btn btn-primary">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+        <button id="submitExamBtn" class="btn btn-danger" style="margin-left: auto;">
+          <i class="fas fa-paper-plane"></i> Submit Exam
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="container">
+  <div style="max-width: 500px; margin: 100px auto; text-align: center;">
+    <div style="background: white; padding: 40px; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+      <h1 style="color: var(--primary-color); margin-bottom: 20px;">
+        <i class="fas fa-shield-alt"></i> LFJC Examination Platform
+      </h1>
+      
+      <div style="margin: 30px 0;">
+        <button id="studentLoginBtn" class="btn btn-primary btn-full" style="margin-bottom: 15px;">
+          <i class="fas fa-user-graduate"></i> Student Login
+        </button>
+        <button id="adminLoginBtn" class="btn btn-secondary btn-full">
+          <i class="fas fa-user-shield"></i> Admin Login
+        </button>
+      </div>
+      
+      <div style="background: var(--light-bg); padding: 20px; border-radius: var(--radius-lg); text-align: left;">
+        <h4><i class="fas fa-info-circle"></i> Platform Features:</h4>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+          <li>75 Questions (Maths, Physics, Chemistry)</li>
+          <li>Drag & Drop Questions</li>
+          <li>Copy-Paste Prevention</li>
+          <li>Admin Question Bank</li>
+          <li>Real-time Proctoring</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Login Modal -->
+<div id="adminLoginModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-lock"></i> Admin Login</h3>
+      <button class="close-modal">&times;</button>
+    </div>
+    <div class="question-editor">
+      <div class="editor-field">
+        <label><i class="fas fa-user"></i> Username</label>
+        <input type="text" id="adminUsername" placeholder="Enter admin username">
+      </div>
+      <div class="editor-field">
+        <label><i class="fas fa-key"></i> Password</label>
+        <input type="password" id="adminPassword" placeholder="Enter admin password">
+      </div>
+      <div class="btn-group">
+        <button id="loginAdminBtn" class="btn btn-primary">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+        <button class="btn btn-secondary close-modal">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Exam Submission Modal -->
+<div id="submitModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Confirm Submission</h3>
+      <button class="close-modal">&times;</button>
+    </div>
+    <div class="question-editor">
+      <div id="submissionSummary" style="text-align: center; padding: 20px;">
+        <h4>Are you sure you want to submit the exam?</h4>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
+          <div style="background: var(--success-color); color: white; padding: 15px; border-radius: 8px;">
+            <h4 id="answeredCount">0</h4>
+            <p>Answered</p>
+          </div>
+          <div style="background: var(--warning-color); color: white; padding: 15px; border-radius: 8px;">
+            <h4 id="markedCount">0</h4>
+            <p>Marked</p>
+          </div>
+          <div style="background: var(--light-bg); padding: 15px; border-radius: 8px;">
+            <h4 id="unansweredCount">0</h4>
+            <p>Unanswered</p>
+          </div>
+          <div style="background: var(--danger-color); color: white; padding: 15px; border-radius: 8px;">
+            <h4 id="timeLeft">03:00:00</h4>
+            <p>Time Left</p>
+          </div>
+        </div>
+        <p style="color: var(--danger-color); font-weight: 600;">
+          <i class="fas fa-exclamation-circle"></i> Once submitted, you cannot return to the exam!
+        </p>
+      </div>
+      <div class="btn-group">
+        <button id="confirmSubmitBtn" class="btn btn-danger">
+          <i class="fas fa-paper-plane"></i> Yes, Submit Exam
+        </button>
+        <button class="btn btn-secondary close-modal">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 // ===== GLOBAL VARIABLES =====
-let microphoneDetector = null;
-let cameraStream = null;
-let currentCameraDeviceId = null;
-
-// ===== DEPLOYMENT CHECK FUNCTIONS =====
-function checkDeploymentStatus() {
-    const isGitHubPages = window.location.hostname.includes('github.io');
-    const isHTTPS = window.location.protocol === 'https:';
-    const isLocalhost = window.location.hostname === 'localhost' || 
-                        window.location.hostname === '127.0.0.1';
-    const isFileProtocol = window.location.protocol === 'file:';
-    
-    console.log('Deployment Status Check:', {
-        hostname: window.location.hostname,
-        protocol: window.location.protocol,
-        isGitHubPages: isGitHubPages,
-        isHTTPS: isHTTPS,
-        isLocalhost: isLocalhost,
-        isFileProtocol: isFileProtocol
-    });
-    
-    if (isGitHubPages) {
-        return { 
-            type: 'github-pages',
-            passed: true,
-            message: 'Deployed on GitHub Pages ✓',
-            warning: false
-        };
-    } else if (isHTTPS && !isGitHubPages) {
-        return { 
-            type: 'https',
-            passed: true,
-            message: 'Running on HTTPS ✓',
-            warning: false
-        };
-    } else if (isLocalhost) {
-        return { 
-            type: 'localhost',
-            passed: true,
-            message: 'Running on local server ✓',
-            warning: false
-        };
-    } else if (isFileProtocol) {
-        return { 
-            type: 'file-protocol',
-            passed: false,
-            message: 'Running locally (file://)',
-            warning: true
-        };
-    } else {
-        return { 
-            type: 'http',
-            passed: false,
-            message: 'Running on HTTP',
-            warning: true
-        };
-    }
-}
-
-function showGitHubWarning() {
-    const deploymentStatus = checkDeploymentStatus();
-    const warning = document.getElementById('githubWarning');
-    const warningMessage = document.getElementById('warningMessage');
-    
-    if (deploymentStatus.warning) {
-        if (deploymentStatus.type === 'file-protocol') {
-            warningMessage.innerHTML = '<strong>Local File Issue:</strong> Camera/microphone access requires a web server.<br>Please run this on a local server or deploy to GitHub.';
-        } else {
-            warningMessage.innerHTML = '<strong>HTTP Issue:</strong> Camera/microphone access requires HTTPS.<br>Upload to GitHub Pages or use HTTPS.';
-        }
-        
-        warning.style.display = 'block';
-        
-        // Auto-hide after 10 seconds
-        setTimeout(() => {
-            warning.style.opacity = '0';
-            warning.style.transform = 'translate(-50%, -100%)';
-            setTimeout(() => {
-                warning.style.display = 'none';
-            }, 500);
-        }, 10000);
-    }
-}
+let currentQuestion = 0;
+let examQuestions = [];
+let userAnswers = {};
+let markedQuestions = new Set();
+let timerInterval;
+let totalTime = 180 * 60; // 180 minutes in seconds
+let questionBank = [];
+let currentDragItem = null;
+let currentMatches = {};
 
 // ===== TOAST SYSTEM =====
 function showToast(message, type = 'info', duration = 5000) {
@@ -1262,1171 +1249,1375 @@ function showToast(message, type = 'info', duration = 5000) {
         <div class="toast-content">
             <div class="toast-message">${message}</div>
         </div>
-        <button class="toast-close">&times;</button>
     `;
     
     container.appendChild(toast);
     
-    // Auto remove after duration
-    const removeToast = () => {
+    setTimeout(() => {
         toast.style.animation = 'slideOutRight 0.3s ease';
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
             }
         }, 300);
-    };
-    
-    setTimeout(removeToast, duration);
-    
-    // Click to close
-    toast.querySelector('.toast-close').addEventListener('click', removeToast);
+    }, duration);
     
     return toast;
 }
 
-// ===== MICROPHONE DETECTOR =====
-class HeadphoneMicrophoneDetector {
-    constructor() {
-        this.audioContext = null;
-        this.analyser = null;
-        this.microphone = null;
-        this.audioStream = null;
-        this.isTesting = false;
-        this.devices = [];
-        this.dataArray = null;
-        this.animationId = null;
+// ===== QUESTION BANK MANAGEMENT =====
+function loadQuestionBank() {
+    const saved = localStorage.getItem('lfjc_question_bank');
+    if (saved) {
+        questionBank = JSON.parse(saved);
+    } else {
+        // Load sample questions
+        questionBank = getSampleQuestions();
+        saveQuestionBank();
     }
+    renderQuestionBank();
+}
+
+function saveQuestionBank() {
+    localStorage.setItem('lfjc_question_bank', JSON.stringify(questionBank));
+}
+
+function renderQuestionBank() {
+    const container = document.getElementById('questionsList');
+    if (!container) return;
     
-    async initialize() {
-        try {
-            // Check if Web Audio API is supported
-            if (!window.AudioContext && !window.webkitAudioContext) {
-                throw new Error('Web Audio API not supported');
-            }
-            
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            if (this.audioContext.state === 'suspended') {
-                await this.audioContext.resume();
-            }
-            
-            return true;
-        } catch (error) {
-            console.error('Audio context initialization failed:', error);
-            showToast(`Audio API error: ${error.message}`, 'error');
-            return false;
-        }
-    }
+    container.innerHTML = '';
     
-    async detectAllAudioDevices() {
-        try {
-            // Check deployment status first
-            const deploymentStatus = checkDeploymentStatus();
-            if (!deploymentStatus.passed) {
-                throw new Error(`Camera/microphone access requires HTTPS or localhost. Current: ${deploymentStatus.type}`);
-            }
-            
-            // Check if media devices API is available
-            if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-                throw new Error('Media Devices API not supported');
-            }
-            
-            // First get permission by trying to access microphone
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                // Stop the stream immediately after getting permission
-                stream.getTracks().forEach(track => track.stop());
-            } catch (permissionError) {
-                console.warn('Permission request failed:', permissionError);
-            }
-            
-            // Now enumerate devices
-            const allDevices = await navigator.mediaDevices.enumerateDevices();
-            console.log('All devices found:', allDevices);
-            
-            // Filter for audio input devices with labels (labels only appear after permission)
-            this.devices = allDevices.filter(device => 
-                device.kind === 'audioinput' && 
-                device.deviceId && 
-                device.deviceId !== 'default'
-            );
-            
-            console.log('Audio input devices:', this.devices);
-            
-            this.displayDevices();
-            return this.devices;
-        } catch (error) {
-            console.error('Device enumeration failed:', error);
-            showToast(`Microphone detection failed: ${error.message}`, 'error');
-            this.devices = [];
-            return [];
-        }
-    }
-    
-    displayDevices() {
-        const container = document.getElementById('deviceItemsContainer');
-        const deviceList = document.getElementById('micDeviceList');
+    questionBank.forEach((q, index) => {
+        const questionItem = document.createElement('div');
+        questionItem.className = 'question-preview-item';
         
-        if (!container) return;
+        const typeIcons = {
+            mcq: 'fa-list-ul',
+            dragdrop: 'fa-arrows-alt',
+            numerical: 'fa-calculator',
+            truefalse: 'fa-check-circle'
+        };
         
-        if (this.devices.length === 0) {
-            deviceList.style.display = 'block';
-            container.innerHTML = `
-                <div class="device-item">
-                    <div class="device-label">
-                        <i class="fas fa-exclamation-triangle"></i> No microphones detected
-                    </div>
-                    <div class="device-id">
-                        Check connections and browser permissions
-                    </div>
+        const subjectColors = {
+            maths: '#FF6B6B',
+            physics: '#36B37E',
+            chemistry: '#00B8D9',
+            general: '#FFAB00'
+        };
+        
+        questionItem.innerHTML = `
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                    <i class="fas ${typeIcons[q.type] || 'fa-question'}"></i>
+                    <span style="background: ${subjectColors[q.subject] || '#B0BAC9'}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">
+                        ${q.subject.toUpperCase()}
+                    </span>
+                    <span style="font-size: 12px; color: var(--text-secondary);">
+                        ${q.difficulty}
+                    </span>
                 </div>
-            `;
+                <div style="font-weight: 600;">${q.text.substring(0, 100)}...</div>
+            </div>
+            <div style="display: flex; gap: 5px;">
+                <button class="btn btn-secondary" onclick="editQuestion(${index})" style="padding: 5px 10px;">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger" onclick="deleteQuestion(${index})" style="padding: 5px 10px;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        
+        container.appendChild(questionItem);
+    });
+}
+
+function editQuestion(index) {
+    const q = questionBank[index];
+    showToast(`Editing question ${index + 1}`, 'info');
+    // Implement edit functionality
+}
+
+function deleteQuestion(index) {
+    if (confirm('Are you sure you want to delete this question?')) {
+        questionBank.splice(index, 1);
+        saveQuestionBank();
+        renderQuestionBank();
+        showToast('Question deleted successfully', 'success');
+    }
+}
+
+// ===== DRAG & DROP FUNCTIONALITY =====
+function setupDragAndDrop() {
+    // Setup drag items
+    const dragItems = document.querySelectorAll('.drag-item');
+    dragItems.forEach(item => {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragend', handleDragEnd);
+    });
+    
+    // Setup drop targets
+    const dropTargets = document.querySelectorAll('.drop-target');
+    dropTargets.forEach(target => {
+        target.addEventListener('dragover', handleDragOver);
+        target.addEventListener('dragenter', handleDragEnter);
+        target.addEventListener('dragleave', handleDragLeave);
+        target.addEventListener('drop', handleDrop);
+    });
+}
+
+function handleDragStart(e) {
+    currentDragItem = this;
+    this.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', this.dataset.id);
+}
+
+function handleDragEnd() {
+    this.classList.remove('dragging');
+    currentDragItem = null;
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+}
+
+function handleDragEnter(e) {
+    e.preventDefault();
+    this.classList.add('over');
+}
+
+function handleDragLeave() {
+    this.classList.remove('over');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    this.classList.remove('over');
+    
+    const itemId = e.dataTransfer.getData('text/plain');
+    const dragItem = document.querySelector(`.drag-item[data-id="${itemId}"]`);
+    
+    if (dragItem && this.dataset.targetId) {
+        // Check if target already has an item
+        const existingItem = this.querySelector('.dropped-item');
+        if (existingItem) {
+            existingItem.remove();
+        }
+        
+        // Add dropped item
+        const droppedItem = document.createElement('div');
+        droppedItem.className = 'dropped-item';
+        droppedItem.dataset.itemId = itemId;
+        droppedItem.innerHTML = `
+            ${dragItem.textContent}
+            <button class="remove-dropped" onclick="removeDroppedItem(this)">&times;</button>
+        `;
+        this.appendChild(droppedItem);
+        this.classList.add('filled');
+        
+        // Record match
+        const targetId = this.dataset.targetId;
+        currentMatches[targetId] = itemId;
+        updateMatchesDisplay();
+        
+        showToast('Item matched successfully!', 'success');
+    }
+}
+
+function removeDroppedItem(btn) {
+    const droppedItem = btn.parentElement;
+    const target = droppedItem.parentElement;
+    const itemId = droppedItem.dataset.itemId;
+    const targetId = target.dataset.targetId;
+    
+    droppedItem.remove();
+    target.classList.remove('filled');
+    delete currentMatches[targetId];
+    updateMatchesDisplay();
+}
+
+function updateMatchesDisplay() {
+    const matchesList = document.getElementById('matchesList');
+    matchesList.innerHTML = '';
+    
+    Object.keys(currentMatches).forEach(targetId => {
+        const itemId = currentMatches[targetId];
+        const matchDiv = document.createElement('div');
+        matchDiv.style.cssText = 'background: #e3f2fd; padding: 8px; margin: 5px 0; border-radius: 4px;';
+        matchDiv.textContent = `Target ${targetId} → Item ${itemId}`;
+        matchesList.appendChild(matchDiv);
+    });
+}
+
+// ===== BULK UPLOAD FUNCTIONALITY =====
+function setupBulkUpload() {
+    const uploadArea = document.getElementById('bulkUploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const pasteBox = document.getElementById('pasteBox');
+    
+    // Click to upload
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', handleFileUpload);
+    
+    // Drag and drop for files
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('over');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('over');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('over');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileUpload({ target: { files: files } });
+        }
+    });
+    
+    // Paste box placeholder
+    pasteBox.addEventListener('focus', function() {
+        if (this.textContent === 'Paste your questions here... (Copy from Excel, Word, or type directly)') {
+            this.textContent = '';
+        }
+    });
+    
+    pasteBox.addEventListener('blur', function() {
+        if (this.textContent.trim() === '') {
+            this.textContent = 'Paste your questions here... (Copy from Excel, Word, or type directly)';
+        }
+    });
+}
+
+function handleFileUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const content = e.target.result;
+        parseBulkQuestions(content);
+    };
+    reader.readAsText(file);
+}
+
+function parseBulkQuestions(text) {
+    // Parse CSV or text format
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    const parsedQuestions = [];
+    
+    lines.forEach((line, index) => {
+        try {
+            // Try CSV parsing
+            const parts = line.split(',').map(part => part.trim());
+            
+            if (parts.length >= 8) {
+                // CSV format: question,opt1,opt2,opt3,opt4,correct,subject,difficulty
+                const question = {
+                    text: parts[0],
+                    options: parts.slice(1, 5).filter(opt => opt !== ''),
+                    correctAnswer: parseInt(parts[5]),
+                    subject: parts[6] || 'general',
+                    difficulty: parts[7] || 'medium',
+                    type: 'mcq'
+                };
+                parsedQuestions.push(question);
+            } else if (line.includes('|')) {
+                // Pipe-separated format
+                const parts = line.split('|').map(part => part.trim());
+                if (parts.length >= 6) {
+                    const question = {
+                        text: parts[0],
+                        options: parts.slice(1, 5).filter(opt => opt !== ''),
+                        correctAnswer: parseInt(parts[5]),
+                        subject: parts[6] || 'general',
+                        difficulty: parts[7] || 'medium',
+                        type: 'mcq'
+                    };
+                    parsedQuestions.push(question);
+                }
+            }
+        } catch (error) {
+            console.warn(`Failed to parse line ${index + 1}:`, error);
+        }
+    });
+    
+    if (parsedQuestions.length > 0) {
+        showPreview(parsedQuestions.slice(0, 5));
+        showToast(`Successfully parsed ${parsedQuestions.length} questions`, 'success');
+    } else {
+        showToast('No questions could be parsed. Check your format.', 'error');
+    }
+}
+
+function showPreview(questions) {
+    const previewContainer = document.getElementById('previewContent');
+    const previewSection = document.getElementById('questionsPreview');
+    
+    previewContainer.innerHTML = '';
+    questions.forEach((q, index) => {
+        const previewItem = document.createElement('div');
+        previewItem.className = 'question-preview-item';
+        previewItem.innerHTML = `
+            <div style="flex: 1;">
+                <div style="font-weight: 600;">Q${index + 1}: ${q.text.substring(0, 80)}...</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">
+                    Options: ${q.options.join(', ')}
+                </div>
+            </div>
+        `;
+        previewContainer.appendChild(previewItem);
+    });
+    
+    previewSection.classList.remove('hidden');
+}
+
+// ===== EXAM FUNCTIONALITY =====
+function startExam() {
+    // Generate sample exam questions
+    examQuestions = generateSampleExam();
+    currentQuestion = 0;
+    userAnswers = {};
+    markedQuestions.clear();
+    
+    // Start timer
+    startTimer();
+    
+    // Generate navigation
+    generateNavigation();
+    
+    // Load first question
+    loadQuestion(currentQuestion);
+    
+    // Show exam interface
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('examInterface').classList.remove('hidden');
+    
+    // Prevent copy-paste
+    preventCopyPaste();
+}
+
+function generateSampleExam() {
+    const questions = [];
+    
+    // Maths questions (25)
+    for (let i = 1; i <= 25; i++) {
+        if (i <= 5) {
+            // Drag & drop questions
+            questions.push({
+                id: i,
+                type: 'dragdrop',
+                subject: 'maths',
+                text: `Match the following mathematical terms with their definitions (Drag items to targets):`,
+                dragItems: [
+                    'Integral',
+                    'Derivative',
+                    'Matrix',
+                    'Vector',
+                    'Scalar'
+                ],
+                targets: [
+                    { id: 1, label: 'Rate of change' },
+                    { id: 2, label: 'Area under curve' },
+                    { id: 3, label: 'Rectangular array' },
+                    { id: 4, label: 'Direction & magnitude' },
+                    { id: 5, label: 'Magnitude only' }
+                ],
+                correctMatches: {
+                    1: '2', // Derivative -> Rate of change
+                    2: '1', // Integral -> Area under curve
+                    3: '3', // Matrix -> Rectangular array
+                    4: '4', // Vector -> Direction & magnitude
+                    5: '5'  // Scalar -> Magnitude only
+                },
+                marks: 4
+            });
+        } else if (i <= 20) {
+            // MCQ questions
+            questions.push({
+                id: i,
+                type: 'mcq',
+                subject: 'maths',
+                text: `What is the value of x in the equation 2x + 5 = 15?`,
+                options: ['5', '10', '15', '20'],
+                correctAnswer: 0,
+                marks: 4
+            });
+        } else {
+            // Numerical questions
+            questions.push({
+                id: i,
+                type: 'numerical',
+                subject: 'maths',
+                text: `Calculate the area of a circle with radius 7cm (Use π = 3.14):`,
+                correctAnswer: '153.86',
+                marks: 4
+            });
+        }
+    }
+    
+    // Physics questions (25)
+    for (let i = 26; i <= 50; i++) {
+        if (i <= 30) {
+            questions.push({
+                id: i,
+                type: 'dragdrop',
+                subject: 'physics',
+                text: `Match the physics laws with their discoverers:`,
+                dragItems: [
+                    "Newton's First Law",
+                    "Ohm's Law",
+                    "Boyle's Law",
+                    "Archimedes' Principle",
+                    "Einstein's Theory"
+                ],
+                targets: [
+                    { id: 1, label: 'George Ohm' },
+                    { id: 2, label: 'Robert Boyle' },
+                    { id: 3, label: 'Isaac Newton' },
+                    { id: 4, label: 'Archimedes' },
+                    { id: 5, label: 'Albert Einstein' }
+                ],
+                correctMatches: {
+                    1: '3', // Newton's First Law -> Isaac Newton
+                    2: '1', // Ohm's Law -> George Ohm
+                    3: '2', // Boyle's Law -> Robert Boyle
+                    4: '4', // Archimedes' Principle -> Archimedes
+                    5: '5'  // Einstein's Theory -> Albert Einstein
+                },
+                marks: 4
+            });
+        } else if (i <= 45) {
+            questions.push({
+                id: i,
+                type: 'mcq',
+                subject: 'physics',
+                text: `What is the unit of force?`,
+                options: ['Joule', 'Watt', 'Newton', 'Pascal'],
+                correctAnswer: 2,
+                marks: 4
+            });
+        } else {
+            questions.push({
+                id: i,
+                type: 'numerical',
+                subject: 'physics',
+                text: `Calculate the force required to accelerate a 5kg mass at 2m/s²:`,
+                correctAnswer: '10',
+                marks: 4
+            });
+        }
+    }
+    
+    // Chemistry questions (25)
+    for (let i = 51; i <= 75; i++) {
+        if (i <= 55) {
+            questions.push({
+                id: i,
+                type: 'dragdrop',
+                subject: 'chemistry',
+                text: `Match the elements with their symbols:`,
+                dragItems: [
+                    'Gold',
+                    'Silver',
+                    'Iron',
+                    'Copper',
+                    'Mercury'
+                ],
+                targets: [
+                    { id: 1, label: 'Ag' },
+                    { id: 2, label: 'Au' },
+                    { id: 3, label: 'Cu' },
+                    { id: 4, label: 'Fe' },
+                    { id: 5, label: 'Hg' }
+                ],
+                correctMatches: {
+                    1: '2', // Gold -> Au
+                    2: '1', // Silver -> Ag
+                    3: '4', // Iron -> Fe
+                    4: '3', // Copper -> Cu
+                    5: '5'  // Mercury -> Hg
+                },
+                marks: 4
+            });
+        } else if (i <= 70) {
+            questions.push({
+                id: i,
+                type: 'mcq',
+                subject: 'chemistry',
+                text: `What is the atomic number of Carbon?`,
+                options: ['6', '12', '14', '16'],
+                correctAnswer: 0,
+                marks: 4
+            });
+        } else {
+            questions.push({
+                id: i,
+                type: 'numerical',
+                subject: 'chemistry',
+                text: `Calculate the molar mass of H₂O (H=1, O=16):`,
+                correctAnswer: '18',
+                marks: 4
+            });
+        }
+    }
+    
+    return questions;
+}
+
+function generateNavigation() {
+    const navContainer = document.getElementById('questionNav');
+    navContainer.innerHTML = '';
+    
+    examQuestions.forEach((q, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'question-nav-btn';
+        btn.textContent = index + 1;
+        btn.dataset.index = index;
+        
+        btn.addEventListener('click', () => {
+            loadQuestion(index);
+        });
+        
+        navContainer.appendChild(btn);
+    });
+    
+    updateNavigation();
+}
+
+function updateNavigation() {
+    const navButtons = document.querySelectorAll('.question-nav-btn');
+    navButtons.forEach((btn, index) => {
+        btn.classList.remove('active', 'answered', 'marked');
+        
+        if (index === currentQuestion) {
+            btn.classList.add('active');
+        }
+        
+        if (userAnswers[index] !== undefined) {
+            btn.classList.add('answered');
+        }
+        
+        if (markedQuestions.has(index)) {
+            btn.classList.add('marked');
+        }
+    });
+}
+
+function loadQuestion(index) {
+    currentQuestion = index;
+    const question = examQuestions[index];
+    const container = document.getElementById('questionContent');
+    
+    container.innerHTML = '';
+    
+    if (question.type === 'mcq') {
+        loadMCQQuestion(question);
+    } else if (question.type === 'dragdrop') {
+        loadDragDropQuestion(question);
+    } else if (question.type === 'numerical') {
+        loadNumericalQuestion(question);
+    }
+    
+    updateNavigation();
+    updateButtonStates();
+}
+
+function loadMCQQuestion(question) {
+    const container = document.getElementById('questionContent');
+    const letters = ['A', 'B', 'C', 'D'];
+    
+    let html = `
+        <div class="question-text">
+            <h3>Question ${question.id} (${question.subject.toUpperCase()})</h3>
+            <p>${question.text}</p>
+            <div style="margin-top: 10px; color: var(--text-secondary);">
+                <i class="fas fa-star"></i> ${question.marks} marks | <i class="fas fa-clock"></i> Suggested time: 2 minutes
+            </div>
+        </div>
+        <div class="options-container">
+    `;
+    
+    question.options.forEach((option, index) => {
+        const isSelected = userAnswers[currentQuestion] === index;
+        html += `
+            <label class="option-label ${isSelected ? 'selected' : ''}">
+                <input type="radio" name="answer" value="${index}" ${isSelected ? 'checked' : ''}>
+                <div class="option-text">
+                    <span class="option-letter">${letters[index]}</span>
+                    <span>${option}</span>
+                </div>
+            </label>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+    
+    // Add event listeners
+    const optionLabels = container.querySelectorAll('.option-label');
+    optionLabels.forEach(label => {
+        label.addEventListener('click', function() {
+            const input = this.querySelector('input');
+            const value = parseInt(input.value);
+            
+            userAnswers[currentQuestion] = value;
+            
+            // Update UI
+            optionLabels.forEach(l => l.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            updateNavigation();
+        });
+    });
+}
+
+function loadDragDropQuestion(question) {
+    const container = document.getElementById('questionContent');
+    
+    let html = `
+        <div class="question-text">
+            <h3>Question ${question.id} (${question.subject.toUpperCase()}) - Drag & Drop</h3>
+            <p>${question.text}</p>
+            <div style="margin-top: 10px; color: var(--text-secondary);">
+                <i class="fas fa-star"></i> ${question.marks} marks | <i class="fas fa-mouse-pointer"></i> Drag items to match
+            </div>
+        </div>
+        <div class="exam-drag-container">
+            <div class="exam-drag-items">
+                <h4><i class="fas fa-arrows-alt"></i> Drag Items</h4>
+    `;
+    
+    question.dragItems.forEach((item, index) => {
+        html += `
+            <div class="exam-drag-item" draggable="true" data-id="${index + 1}">
+                ${item}
+            </div>
+        `;
+    });
+    
+    html += `
+            </div>
+            <div class="exam-drop-zones">
+                <h4><i class="fas fa-bullseye"></i> Drop Targets</h4>
+    `;
+    
+    question.targets.forEach(target => {
+        const userMatch = userAnswers[currentQuestion]?.[target.id];
+        html += `
+            <div class="exam-drop-zone ${userMatch ? 'filled' : ''}" data-target-id="${target.id}">
+                <h5>${target.label}</h5>
+                ${userMatch ? `
+                    <div class="dropped-item">
+                        ${question.dragItems[userMatch - 1]}
+                        <button class="remove-dropped" onclick="removeExamDroppedItem(this)">&times;</button>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    });
+    
+    html += `
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    
+    // Setup exam drag and drop
+    setupExamDragDrop(question);
+}
+
+function setupExamDragDrop(question) {
+    const dragItems = document.querySelectorAll('.exam-drag-item');
+    const dropZones = document.querySelectorAll('.exam-drop-zone');
+    
+    dragItems.forEach(item => {
+        item.addEventListener('dragstart', handleExamDragStart);
+        item.addEventListener('dragend', handleExamDragEnd);
+    });
+    
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', handleExamDragOver);
+        zone.addEventListener('dragenter', handleExamDragEnter);
+        zone.addEventListener('dragleave', handleExamDragLeave);
+        zone.addEventListener('drop', (e) => handleExamDrop(e, question));
+    });
+}
+
+function handleExamDragStart(e) {
+    this.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', this.dataset.id);
+}
+
+function handleExamDragEnd() {
+    this.classList.remove('dragging');
+}
+
+function handleExamDragOver(e) {
+    e.preventDefault();
+}
+
+function handleExamDragEnter(e) {
+    e.preventDefault();
+    this.classList.add('over');
+}
+
+function handleExamDragLeave() {
+    this.classList.remove('over');
+}
+
+function handleExamDrop(e, question) {
+    e.preventDefault();
+    this.classList.remove('over');
+    
+    const itemId = e.dataTransfer.getData('text/plain');
+    const dragItem = document.querySelector(`.exam-drag-item[data-id="${itemId}"]`);
+    const targetId = this.dataset.targetId;
+    
+    if (dragItem && targetId) {
+        // Store user's answer
+        if (!userAnswers[currentQuestion]) {
+            userAnswers[currentQuestion] = {};
+        }
+        userAnswers[currentQuestion][targetId] = itemId;
+        
+        // Update UI
+        const existingItem = this.querySelector('.dropped-item');
+        if (existingItem) {
+            existingItem.remove();
+        }
+        
+        const droppedItem = document.createElement('div');
+        droppedItem.className = 'dropped-item';
+        droppedItem.innerHTML = `
+            ${dragItem.textContent}
+            <button class="remove-dropped" onclick="removeExamDroppedItem(this)">&times;</button>
+        `;
+        this.appendChild(droppedItem);
+        this.classList.add('filled');
+        
+        updateNavigation();
+    }
+}
+
+function removeExamDroppedItem(btn) {
+    const droppedItem = btn.parentElement;
+    const target = droppedItem.parentElement;
+    const targetId = target.dataset.targetId;
+    
+    droppedItem.remove();
+    target.classList.remove('filled');
+    
+    if (userAnswers[currentQuestion]) {
+        delete userAnswers[currentQuestion][targetId];
+    }
+    
+    updateNavigation();
+}
+
+function loadNumericalQuestion(question) {
+    const container = document.getElementById('questionContent');
+    const userAnswer = userAnswers[currentQuestion] || '';
+    
+    container.innerHTML = `
+        <div class="question-text">
+            <h3>Question ${question.id} (${question.subject.toUpperCase()}) - Numerical</h3>
+            <p>${question.text}</p>
+            <div style="margin-top: 10px; color: var(--text-secondary);">
+                <i class="fas fa-star"></i> ${question.marks} marks | <i class="fas fa-calculator"></i> Enter numerical value
+            </div>
+        </div>
+        <div class="editor-field" style="margin-top: 30px;">
+            <label><i class="fas fa-keyboard"></i> Your Answer:</label>
+            <input type="text" id="numericalAnswer" value="${userAnswer}" placeholder="Enter numerical value...">
+        </div>
+        <div style="margin-top: 20px; color: var(--text-secondary); font-size: 14px;">
+            <i class="fas fa-info-circle"></i> Enter numbers only. Use decimal point if needed.
+        </div>
+    `;
+    
+    const input = container.querySelector('#numericalAnswer');
+    input.addEventListener('input', function() {
+        userAnswers[currentQuestion] = this.value.trim();
+        updateNavigation();
+    });
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    
+    timerInterval = setInterval(() => {
+        totalTime--;
+        
+        if (totalTime <= 0) {
+            clearInterval(timerInterval);
+            autoSubmitExam();
             return;
         }
         
-        container.innerHTML = '';
-        this.devices.forEach((device, index) => {
-            const deviceItem = document.createElement('div');
-            deviceItem.className = 'device-item';
-            deviceItem.dataset.deviceId = device.deviceId;
-            
-            const isHeadset = this.isLikelyHeadset(device.label || '');
-            const headsetIcon = isHeadset ? '<i class="fas fa-headphones"></i>' : '<i class="fas fa-microphone"></i>';
-            const deviceName = device.label || `Microphone ${index + 1}`;
-            
-            deviceItem.innerHTML = `
-                <div class="device-label">
-                    ${headsetIcon} ${deviceName}
-                </div>
-                <div class="device-id">
-                    ${device.deviceId.substring(0, 40)}...
-                </div>
-            `;
-            
-            // Click to select and test this device
-            deviceItem.addEventListener('click', () => {
-                document.querySelectorAll('.device-item').forEach(item => {
-                    item.style.background = '';
-                });
-                deviceItem.style.background = 'rgba(46, 91, 255, 0.1)';
-                this.startTest(device.deviceId);
-            });
-            
-            container.appendChild(deviceItem);
-        });
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const hours = Math.floor(totalTime / 3600);
+    const minutes = Math.floor((totalTime % 3600) / 60);
+    const seconds = totalTime % 60;
+    
+    const timer = document.getElementById('timer');
+    if (timer) {
+        timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
     
-    isLikelyHeadset(label) {
-        if (!label) return false;
-        
-        const headsetKeywords = [
-            'headset', 'headphone', 'earphone', 'headphones', 
-            'usb audio', 'bluetooth', 'wireless', 'gaming',
-            'logitech', 'hyperx', 'razer', 'steelseries',
-            'sony', 'bose', 'jbl', 'sennheiser', 'audio-technica'
-        ];
-        
-        const lowerLabel = label.toLowerCase();
-        return headsetKeywords.some(keyword => lowerLabel.includes(keyword));
+    // Color coding for time
+    if (totalTime < 300) { // Less than 5 minutes
+        timer.style.color = '#FF5630';
+        timer.style.animation = 'pulse 1s infinite';
+    } else if (totalTime < 900) { // Less than 15 minutes
+        timer.style.color = '#FFAB00';
+    }
+}
+
+function updateButtonStates() {
+    const prevBtn = document.getElementById('prevQuestionBtn');
+    const nextBtn = document.getElementById('nextQuestionBtn');
+    const markBtn = document.getElementById('markQuestionBtn');
+    
+    if (prevBtn) {
+        prevBtn.disabled = currentQuestion === 0;
     }
     
-    async startTest(deviceId = null) {
-        try {
-            this.stopTest();
-            
-            if (!this.audioContext) {
-                await this.initialize();
-                if (!this.audioContext) return false;
-            }
-            
-            console.log('Starting microphone test with device:', deviceId);
-            
-            const constraints = {
-                audio: {
-                    deviceId: deviceId ? { exact: deviceId } : undefined,
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false,
-                    channelCount: 1,
-                    sampleRate: 44100
-                }
-            };
-            
-            // If no deviceId specified, let browser choose
-            if (!deviceId) {
-                constraints.audio = true;
-            }
-            
-            this.audioStream = await navigator.mediaDevices.getUserMedia(constraints);
-            console.log('Got audio stream:', this.audioStream);
-            
-            this.setupAudioAnalysis();
-            this.startVisualization();
-            
-            this.isTesting = true;
-            
-            // Update UI
-            document.getElementById('startMicTest').disabled = true;
-            document.getElementById('stopMicTest').disabled = false;
-            
-            showToast('Microphone test started. Speak into your microphone.', 'success');
-            return true;
-            
-        } catch (error) {
-            console.error('Microphone test failed:', error);
-            
-            let errorMsg = 'Failed to access microphone. ';
-            if (error.name === 'NotAllowedError') {
-                errorMsg += 'Permission denied. Please allow microphone access in your browser.';
-            } else if (error.name === 'NotFoundError') {
-                errorMsg += 'No microphone found. Please connect a microphone.';
-            } else if (error.name === 'NotReadableError') {
-                errorMsg += 'Microphone is already in use by another application.';
-            } else {
-                errorMsg += error.message;
-            }
-            
-            showToast(errorMsg, 'error');
-            return false;
-        }
+    if (nextBtn) {
+        nextBtn.disabled = currentQuestion === examQuestions.length - 1;
     }
     
-    setupAudioAnalysis() {
-        if (!this.audioStream || !this.audioContext) return;
-        
-        this.analyser = this.audioContext.createAnalyser();
-        this.analyser.fftSize = 256;
-        this.analyser.smoothingTimeConstant = 0.8;
-        
-        this.microphone = this.audioContext.createMediaStreamSource(this.audioStream);
-        this.microphone.connect(this.analyser);
-        
-        this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-        
-        // Also connect to destination to avoid Chrome security warning
-        this.analyser.connect(this.audioContext.destination);
-    }
-    
-    startVisualization() {
-        const canvas = document.getElementById('micFrequencyCanvas');
-        const ctx = canvas.getContext('2d');
-        const levelBar = document.getElementById('micLevelIndicator');
-        const volumeDisplay = document.getElementById('micVolumeLevel');
-        
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        
-        const draw = () => {
-            if (!this.isTesting || !this.analyser || !this.dataArray) {
-                return;
-            }
-            
-            this.animationId = requestAnimationFrame(draw);
-            
-            this.analyser.getByteFrequencyData(this.dataArray);
-            
-            let sum = 0;
-            for (let i = 0; i < this.dataArray.length; i++) {
-                sum += this.dataArray[i];
-            }
-            const average = sum / this.dataArray.length;
-            const volume = average / 255;
-            
-            if (volumeDisplay) {
-                const percent = Math.round(volume * 100);
-                volumeDisplay.textContent = `${percent}%`;
-                
-                if (volume > 0.1) {
-                    volumeDisplay.style.color = '#36B37E'; // Green for good volume
-                } else if (volume > 0.05) {
-                    volumeDisplay.style.color = '#FFAB00'; // Yellow for medium
-                } else if (volume > 0.02) {
-                    volumeDisplay.style.color = '#FF5630'; // Red for low
-                } else {
-                    volumeDisplay.style.color = '#B0BAC9'; // Gray for no sound
-                }
-            }
-            
-            if (levelBar) {
-                const heightPercent = Math.min(volume * 300, 100);
-                levelBar.style.height = `${heightPercent}%`;
-                
-                if (volume > 0.1) {
-                    levelBar.style.background = 'linear-gradient(to top, #36B37E, #00C9A7)';
-                } else if (volume > 0.05) {
-                    levelBar.style.background = 'linear-gradient(to top, #FFAB00, #FFC400)';
-                } else if (volume > 0.02) {
-                    levelBar.style.background = 'linear-gradient(to top, #FF5630, #FF7452)';
-                } else {
-                    levelBar.style.background = 'linear-gradient(to top, #B0BAC9, #DFE1E6)';
-                }
-            }
-            
-            this.drawFrequencyBars(ctx, canvas.width, canvas.height);
-        };
-        
-        draw();
-    }
-    
-    drawFrequencyBars(ctx, width, height) {
-        if (!this.dataArray) return;
-        
-        ctx.clearRect(0, 0, width, height);
-        
-        const barWidth = (width / this.dataArray.length) * 2.5;
-        let x = 0;
-        
-        for (let i = 0; i < this.dataArray.length; i++) {
-            const barHeight = (this.dataArray[i] / 255) * height;
-            
-            const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height);
-            
-            if (barHeight > height * 0.7) {
-                gradient.addColorStop(0, '#36B37E');
-                gradient.addColorStop(1, '#00C9A7');
-            } else if (barHeight > height * 0.4) {
-                gradient.addColorStop(0, '#FFAB00');
-                gradient.addColorStop(1, '#FFC400');
-            } else {
-                gradient.addColorStop(0, '#2E5BFF');
-                gradient.addColorStop(1, '#8A2BE2');
-            }
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(x, height - barHeight, barWidth, barHeight);
-            
-            x += barWidth + 1;
-        }
-    }
-    
-    stopTest() {
-        this.isTesting = false;
-        
-        if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
-            this.animationId = null;
-        }
-        
-        if (this.audioStream) {
-            this.audioStream.getTracks().forEach(track => {
-                track.stop();
-                track.enabled = false;
-            });
-            this.audioStream = null;
-        }
-        
-        if (this.microphone) {
-            this.microphone.disconnect();
-            this.microphone = null;
-        }
-        
-        if (this.analyser) {
-            this.analyser.disconnect();
-            this.analyser = null;
-        }
-        
-        const canvas = document.getElementById('micFrequencyCanvas');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-        
-        const levelBar = document.getElementById('micLevelIndicator');
-        if (levelBar) {
-            levelBar.style.height = '0%';
-        }
-        
-        const volumeDisplay = document.getElementById('micVolumeLevel');
-        if (volumeDisplay) {
-            volumeDisplay.textContent = '0%';
-            volumeDisplay.style.color = '#B0BAC9';
-        }
-        
-        // Reset buttons
-        const startBtn = document.getElementById('startMicTest');
-        const stopBtn = document.getElementById('stopMicTest');
-        if (startBtn) startBtn.disabled = false;
-        if (stopBtn) stopBtn.disabled = true;
-    }
-    
-    cleanup() {
-        this.stopTest();
-        
-        if (this.audioContext) {
-            this.audioContext.close().then(() => {
-                this.audioContext = null;
-            }).catch(console.error);
+    if (markBtn) {
+        if (markedQuestions.has(currentQuestion)) {
+            markBtn.innerHTML = '<i class="fas fa-bookmark"></i> Unmark';
+            markBtn.classList.remove('btn-warning');
+            markBtn.classList.add('btn-secondary');
+        } else {
+            markBtn.innerHTML = '<i class="far fa-bookmark"></i> Mark for Review';
+            markBtn.classList.remove('btn-secondary');
+            markBtn.classList.add('btn-warning');
         }
     }
 }
 
-// ===== CAMERA FUNCTIONS =====
-async function detectAllCameras() {
-    try {
-        const deploymentStatus = checkDeploymentStatus();
-        if (!deploymentStatus.passed) {
-            throw new Error(`Camera access requires HTTPS or localhost. Current: ${deploymentStatus.type}`);
+function preventCopyPaste() {
+    // Prevent right-click
+    document.addEventListener('contextmenu', (e) => {
+        if (document.getElementById('examInterface').classList.contains('hidden')) return;
+        e.preventDefault();
+        showToast('Right-click is disabled during exam', 'warning');
+    });
+    
+    // Prevent copy
+    document.addEventListener('copy', (e) => {
+        if (document.getElementById('examInterface').classList.contains('hidden')) return;
+        e.preventDefault();
+        showToast('Copying is disabled during exam', 'warning');
+    });
+    
+    // Prevent cut
+    document.addEventListener('cut', (e) => {
+        if (document.getElementById('examInterface').classList.contains('hidden')) return;
+        e.preventDefault();
+        showToast('Cutting is disabled during exam', 'warning');
+    });
+    
+    // Prevent paste
+    document.addEventListener('paste', (e) => {
+        if (document.getElementById('examInterface').classList.contains('hidden')) return;
+        e.preventDefault();
+        showToast('Pasting is disabled during exam', 'warning');
+    });
+    
+    // Prevent keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (document.getElementById('examInterface').classList.contains('hidden')) return;
+        
+        // Ctrl+C, Ctrl+V, Ctrl+X
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x')) {
+            e.preventDefault();
+            showToast('This shortcut is disabled during exam', 'warning');
         }
         
-        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-            throw new Error('Media Devices API not supported');
+        // Print Screen
+        if (e.key === 'PrintScreen') {
+            e.preventDefault();
+            showToast('Screenshots are disabled during exam', 'warning');
         }
-        
-        // First get permission by trying to access camera
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            stream.getTracks().forEach(track => track.stop());
-        } catch (permissionError) {
-            console.warn('Camera permission request failed:', permissionError);
-        }
-        
-        // Now enumerate devices
-        const allDevices = await navigator.mediaDevices.enumerateDevices();
-        const cameras = allDevices.filter(device => 
-            device.kind === 'videoinput' && 
-            device.deviceId && 
-            device.deviceId !== 'default'
-        );
-        
-        console.log('Cameras found:', cameras);
-        displayCameras(cameras);
-        
-        return cameras;
-    } catch (error) {
-        console.error('Camera detection failed:', error);
-        showToast(`Camera detection failed: ${error.message}`, 'error');
-        return [];
-    }
-}
-
-function displayCameras(cameras) {
-    const container = document.getElementById('cameraItemsContainer');
-    const deviceList = document.getElementById('cameraDeviceList');
-    
-    if (!container) return;
-    
-    if (cameras.length === 0) {
-        deviceList.style.display = 'block';
-        container.innerHTML = `
-            <div class="camera-device-item">
-                <div class="device-label">
-                    <i class="fas fa-exclamation-triangle"></i> No cameras detected
-                </div>
-                <div class="device-id">
-                    Check connections and browser permissions
-                </div>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = '';
-    cameras.forEach((camera, index) => {
-        const cameraItem = document.createElement('div');
-        cameraItem.className = 'camera-device-item';
-        cameraItem.dataset.deviceId = camera.deviceId;
-        
-        const cameraName = camera.label || `Camera ${index + 1}`;
-        
-        cameraItem.innerHTML = `
-            <div class="device-label">
-                <i class="fas fa-video"></i> ${cameraName}
-            </div>
-            <div class="device-id">
-                ${camera.deviceId.substring(0, 40)}...
-            </div>
-        `;
-        
-        cameraItem.addEventListener('click', () => {
-            document.querySelectorAll('.camera-device-item').forEach(item => {
-                item.style.background = '';
-            });
-            cameraItem.style.background = 'rgba(46, 91, 255, 0.1)';
-            startCameraTest(camera.deviceId);
-        });
-        
-        container.appendChild(cameraItem);
     });
 }
 
-async function startCameraTest(deviceId = null) {
-    try {
-        stopCameraTest();
-        
-        console.log('Starting camera test with device:', deviceId);
-        
-        const constraints = {
-            video: {
-                deviceId: deviceId ? { exact: deviceId } : undefined,
-                width: { ideal: 1280 },
-                height: { ideal: 720 },
-                facingMode: 'user'
+function showSubmissionModal() {
+    const answered = Object.keys(userAnswers).length;
+    const marked = markedQuestions.size;
+    const unanswered = examQuestions.length - answered;
+    
+    document.getElementById('answeredCount').textContent = answered;
+    document.getElementById('markedCount').textContent = marked;
+    document.getElementById('unansweredCount').textContent = unanswered;
+    
+    const modal = document.getElementById('submitModal');
+    modal.style.display = 'flex';
+}
+
+function autoSubmitExam() {
+    showToast('Time is up! Auto-submitting exam...', 'warning');
+    submitExam();
+}
+
+function submitExam() {
+    clearInterval(timerInterval);
+    
+    // Calculate score
+    let score = 0;
+    examQuestions.forEach((q, index) => {
+        if (userAnswers[index] !== undefined) {
+            if (q.type === 'mcq' || q.type === 'numerical') {
+                if (q.type === 'mcq' && userAnswers[index] === q.correctAnswer) {
+                    score += q.marks;
+                } else if (q.type === 'numerical' && userAnswers[index] === q.correctAnswer) {
+                    score += q.marks;
+                } else if (q.type === 'mcq') {
+                    score -= 1; // Negative marking for wrong MCQ
+                }
+            } else if (q.type === 'dragdrop') {
+                // Check drag & drop answers
+                const userMatches = userAnswers[index];
+                if (userMatches) {
+                    let correct = 0;
+                    Object.keys(q.correctMatches).forEach(targetId => {
+                        if (userMatches[targetId] === q.correctMatches[targetId]) {
+                            correct++;
+                        }
+                    });
+                    if (correct === Object.keys(q.correctMatches).length) {
+                        score += q.marks;
+                    } else if (correct > 0) {
+                        score += Math.floor((correct / Object.keys(q.correctMatches).length) * q.marks);
+                    }
+                }
             }
-        };
-        
-        if (!deviceId) {
-            constraints.video = true;
         }
-        
-        cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-        currentCameraDeviceId = deviceId;
-        
-        const videoElement = document.getElementById('cameraPreview');
-        const statusElement = document.getElementById('cameraStatus');
-        
-        videoElement.srcObject = cameraStream;
-        statusElement.textContent = 'Camera on';
-        
-        // Update UI
-        document.getElementById('startCameraTest').disabled = true;
-        document.getElementById('stopCameraTest').disabled = false;
-        
-        showToast('Camera test started.', 'success');
-        return true;
-        
-    } catch (error) {
-        console.error('Camera test failed:', error);
-        
-        let errorMsg = 'Failed to access camera. ';
-        if (error.name === 'NotAllowedError') {
-            errorMsg += 'Permission denied. Please allow camera access in your browser.';
-        } else if (error.name === 'NotFoundError') {
-            errorMsg += 'No camera found. Please connect a camera.';
-        } else if (error.name === 'NotReadableError') {
-            errorMsg += 'Camera is already in use by another application.';
-        } else {
-            errorMsg += error.message;
-        }
-        
-        showToast(errorMsg, 'error');
-        return false;
-    }
+    });
+    
+    // Show results
+    document.getElementById('examInterface').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    
+    alert(`Exam Submitted!\n\nScore: ${score}/${examQuestions.length * 4}\nPercentage: ${((score / (examQuestions.length * 4)) * 100).toFixed(2)}%\n\nAnswered: ${Object.keys(userAnswers).length}/${examQuestions.length}`);
+    
+    showToast('Exam submitted successfully!', 'success');
 }
 
-function stopCameraTest() {
-    if (cameraStream) {
-        cameraStream.getTracks().forEach(track => {
-            track.stop();
-            track.enabled = false;
-        });
-        cameraStream = null;
-    }
-    
-    const videoElement = document.getElementById('cameraPreview');
-    if (videoElement) {
-        videoElement.srcObject = null;
-    }
-    
-    const statusElement = document.getElementById('cameraStatus');
-    if (statusElement) {
-        statusElement.textContent = 'Camera off';
-    }
-    
-    // Reset buttons
-    const startBtn = document.getElementById('startCameraTest');
-    const stopBtn = document.getElementById('stopCameraTest');
-    if (startBtn) startBtn.disabled = false;
-    if (stopBtn) stopBtn.disabled = true;
-}
-
-// ===== SYSTEM CHECK FUNCTIONS =====
-async function runSystemChecks() {
-    console.log('Running system checks...');
-    
-    const checks = [
-        { id: 'browserCheckItem', test: checkBrowserCompatibility },
-        { id: 'deploymentCheckItem', test: checkDeployment },
-        { id: 'cameraCheckItem', test: checkCameraAccess },
-        { id: 'micCheckItem', test: checkMicrophoneAccess },
-        { id: 'networkCheckItem', test: checkNetworkStability }
+// ===== SAMPLE QUESTIONS FOR BANK =====
+function getSampleQuestions() {
+    return [
+        {
+            id: 1,
+            type: 'mcq',
+            text: 'What is the chemical symbol for Gold?',
+            options: ['Go', 'Gd', 'Au', 'Ag'],
+            correctAnswer: 2,
+            subject: 'chemistry',
+            difficulty: 'easy',
+            explanation: 'Gold is represented by Au from Latin "Aurum"'
+        },
+        {
+            id: 2,
+            type: 'dragdrop',
+            text: 'Match the programming languages with their types:',
+            dragItems: ['Python', 'Java', 'HTML', 'SQL'],
+            targets: [
+                { id: 1, label: 'Object-oriented' },
+                { id: 2, label: 'Scripting' },
+                { id: 3, label: 'Markup' },
+                { id: 4, label: 'Database' }
+            ],
+            correctMatches: {
+                1: '2', // Python -> Scripting
+                2: '1', // Java -> Object-oriented
+                3: '3', // HTML -> Markup
+                4: '4'  // SQL -> Database
+            },
+            subject: 'general',
+            difficulty: 'medium'
+        },
+        {
+            id: 3,
+            type: 'numerical',
+            text: 'Solve: 15 × 3 + 20 ÷ 4',
+            correctAnswer: '50',
+            subject: 'maths',
+            difficulty: 'easy'
+        }
     ];
-    
-    let allPassed = true;
-    
-    for (let i = 0; i < checks.length; i++) {
-        const check = checks[i];
-        const element = document.getElementById(check.id);
-        const status = element.querySelector('.check-status');
-        
-        element.classList.remove('passed', 'failed');
-        element.classList.add('testing');
-        status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
-        
-        try {
-            const result = await check.test();
-            
-            if (result.passed) {
-                element.classList.remove('testing');
-                element.classList.add('passed');
-                status.innerHTML = '<i class="fas fa-check-circle"></i> Passed';
-                
-                if (result.message) {
-                    element.querySelector('.check-description').textContent = result.message;
-                }
-            } else {
-                element.classList.remove('testing');
-                element.classList.add('failed');
-                status.innerHTML = '<i class="fas fa-times-circle"></i> Failed';
-                allPassed = false;
-                
-                if (result.message) {
-                    element.querySelector('.check-description').textContent = result.message;
-                }
-            }
-        } catch (error) {
-            console.error(`Check ${check.id} failed:`, error);
-            element.classList.remove('testing');
-            element.classList.add('failed');
-            status.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
-            element.querySelector('.check-description').textContent = error.message || 'Check failed';
-            allPassed = false;
-        }
-        
-        // Small delay between checks for better UX
-        if (i < checks.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 800));
-        }
-    }
-    
-    const proceedBtn = document.getElementById('proceedToRegistration');
-    if (proceedBtn) {
-        proceedBtn.disabled = !allPassed;
-        if (!allPassed) {
-            proceedBtn.title = 'Fix all checks to continue';
-        }
-    }
-    
-    return allPassed;
-}
-
-async function checkBrowserCompatibility() {
-    const isChrome = /chrome|chromium|crios/i.test(navigator.userAgent);
-    const versionMatch = navigator.userAgent.match(/(chrome|chromium|crios)\/(\d+)/i);
-    const version = versionMatch ? parseInt(versionMatch[2]) : 0;
-    const isFirefox = /firefox|fxios/i.test(navigator.userAgent);
-    const isEdge = /edg/i.test(navigator.userAgent);
-    
-    let message = '';
-    let passed = false;
-    
-    if (isChrome) {
-        passed = version >= 80;
-        message = `Chrome ${version} ${passed ? '✓' : '(Update to 80+)'}`;
-    } else if (isFirefox) {
-        passed = true;
-        message = 'Firefox (supported)';
-    } else if (isEdge) {
-        passed = true;
-        message = 'Edge (supported)';
-    } else {
-        passed = false;
-        message = 'Use Chrome 80+, Firefox, or Edge';
-    }
-    
-    return { passed, message };
-}
-
-async function checkDeployment() {
-    const deploymentStatus = checkDeploymentStatus();
-    
-    return {
-        passed: deploymentStatus.passed,
-        message: deploymentStatus.message
-    };
-}
-
-async function checkCameraAccess() {
-    try {
-        const deploymentStatus = checkDeploymentStatus();
-        
-        if (!deploymentStatus.passed) {
-            return { 
-                passed: false, 
-                message: 'Deploy to GitHub Pages or use HTTPS/localhost' 
-            };
-        }
-        
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            return { passed: false, message: 'Camera API not supported' };
-        }
-        
-        // Quick test with simple constraints
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { width: { ideal: 640 }, height: { ideal: 480 } } 
-        });
-        
-        // Get camera info
-        const videoTrack = stream.getVideoTracks()[0];
-        const settings = videoTrack.getSettings();
-        
-        stream.getTracks().forEach(track => track.stop());
-        
-        return { 
-            passed: true, 
-            message: `Camera ready (${settings.width || 640}x${settings.height || 480})` 
-        };
-    } catch (error) {
-        console.error('Camera check failed:', error);
-        let message = 'Camera access failed';
-        if (error.name === 'NotFoundError') message = 'No camera found';
-        if (error.name === 'NotAllowedError') message = 'Permission denied';
-        
-        return { passed: false, message };
-    }
-}
-
-async function checkMicrophoneAccess() {
-    try {
-        const deploymentStatus = checkDeploymentStatus();
-        
-        if (!deploymentStatus.passed) {
-            return { 
-                passed: false, 
-                message: 'Deploy to GitHub Pages or use HTTPS/localhost'
-            };
-        }
-        
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            return { passed: false, message: 'Microphone API not supported' };
-        }
-        
-        // Create detector instance
-        microphoneDetector = new HeadphoneMicrophoneDetector();
-        
-        // Try to get devices
-        const devices = await microphoneDetector.detectAllAudioDevices();
-        
-        if (devices.length === 0) {
-            microphoneDetector.cleanup();
-            return { 
-                passed: false, 
-                message: 'No microphone detected'
-            };
-        }
-        
-        // Quick test
-        const testResult = await microphoneDetector.testAllDevices();
-        
-        if (testResult.success) {
-            microphoneDetector.cleanup();
-            const deviceName = testResult.device?.label || 'Microphone';
-            return { 
-                passed: true, 
-                message: `${deviceName.substring(0, 30)}... ✓`
-            };
-        } else {
-            microphoneDetector.cleanup();
-            return { 
-                passed: false, 
-                message: 'Microphone not working'
-            };
-        }
-        
-    } catch (error) {
-        console.error('Microphone check failed:', error);
-        let message = 'Microphone check failed';
-        if (error.name === 'NotAllowedError') message = 'Permission denied';
-        if (error.name === 'NotFoundError') message = 'No microphone found';
-        
-        return { 
-            passed: false, 
-            message
-        };
-    }
-}
-
-async function checkNetworkStability() {
-    if (!navigator.onLine) {
-        return { passed: false, message: 'No internet connection' };
-    }
-    
-    // Simple network check
-    return new Promise((resolve) => {
-        const startTime = Date.now();
-        const img = new Image();
-        
-        // Use a small image that should always be available
-        img.src = 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png?t=' + Date.now();
-        
-        img.onload = () => {
-            const latency = Date.now() - startTime;
-            const passed = latency < 2000; // 2 second timeout
-            resolve({
-                passed,
-                message: passed ? `Connected (${latency}ms)` : 'Slow connection'
-            });
-        };
-        
-        img.onerror = () => {
-            resolve({
-                passed: true, // Still pass if image fails but we're online
-                message: 'Network connected'
-            });
-        };
-        
-        // Timeout after 3 seconds
-        setTimeout(() => {
-            if (!img.complete) {
-                resolve({
-                    passed: true, // Network might be slow but connected
-                    message: 'Network timeout (slow)'
-                });
-            }
-        }, 3000);
-    });
-}
-
-// ===== MODAL FUNCTIONS =====
-function showMicrophoneTestModal() {
-    const modal = document.getElementById('microphoneTestModal');
-    if (!modal) return;
-    
-    modal.style.display = 'flex';
-    
-    if (!microphoneDetector) {
-        microphoneDetector = new HeadphoneMicrophoneDetector();
-    }
-    
-    // Setup event listeners for microphone modal
-    document.getElementById('startMicTest').onclick = async () => {
-        try {
-            const success = await microphoneDetector.startTest();
-            if (!success) {
-                document.getElementById('startMicTest').disabled = false;
-                document.getElementById('stopMicTest').disabled = true;
-            }
-        } catch (error) {
-            console.error('Failed to start microphone test:', error);
-            showToast('Failed to start test: ' + error.message, 'error');
-            document.getElementById('startMicTest').disabled = false;
-            document.getElementById('stopMicTest').disabled = true;
-        }
-    };
-    
-    document.getElementById('stopMicTest').onclick = () => {
-        microphoneDetector.stopTest();
-        showToast('Microphone test stopped', 'info');
-    };
-    
-    document.getElementById('skipMicTest').onclick = () => {
-        if (microphoneDetector) {
-            microphoneDetector.cleanup();
-        }
-        
-        modal.style.display = 'none';
-        
-        const micItem = document.getElementById('micCheckItem');
-        if (micItem) {
-            const status = micItem.querySelector('.check-status');
-            micItem.classList.remove('failed', 'testing');
-            micItem.classList.add('failed');
-            status.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Skipped';
-            micItem.querySelector('.check-description').textContent = 'Audio monitoring disabled';
-        }
-        
-        showToast('Microphone test skipped. Audio monitoring disabled.', 'warning');
-        checkAllPassed();
-    };
-    
-    document.getElementById('retryMicTest').onclick = async () => {
-        showToast('Retrying microphone detection...', 'info');
-        
-        if (microphoneDetector) {
-            microphoneDetector.cleanup();
-        }
-        
-        microphoneDetector = new HeadphoneMicrophoneDetector();
-        
-        try {
-            const devices = await microphoneDetector.detectAllAudioDevices();
-            
-            if (devices.length > 0) {
-                showToast(`${devices.length} microphone(s) detected`, 'success');
-            } else {
-                showToast('Still no microphone detected', 'error');
-            }
-        } catch (error) {
-            showToast('Detection failed: ' + error.message, 'error');
-        }
-    };
-    
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-    
-    // Load devices when modal opens
-    setTimeout(() => {
-        if (microphoneDetector) {
-            microphoneDetector.detectAllAudioDevices();
-        }
-    }, 100);
-}
-
-function showCameraTestModal() {
-    const modal = document.getElementById('cameraTestModal');
-    if (!modal) return;
-    
-    modal.style.display = 'flex';
-    
-    // Setup event listeners for camera modal
-    document.getElementById('startCameraTest').onclick = async () => {
-        try {
-            const success = await startCameraTest();
-            if (!success) {
-                document.getElementById('startCameraTest').disabled = false;
-                document.getElementById('stopCameraTest').disabled = true;
-            }
-        } catch (error) {
-            console.error('Failed to start camera test:', error);
-            showToast('Failed to start test: ' + error.message, 'error');
-            document.getElementById('startCameraTest').disabled = false;
-            document.getElementById('stopCameraTest').disabled = true;
-        }
-    };
-    
-    document.getElementById('stopCameraTest').onclick = () => {
-        stopCameraTest();
-        showToast('Camera test stopped', 'info');
-    };
-    
-    document.getElementById('skipCameraTest').onclick = () => {
-        stopCameraTest();
-        modal.style.display = 'none';
-        
-        const cameraItem = document.getElementById('cameraCheckItem');
-        if (cameraItem) {
-            const status = cameraItem.querySelector('.check-status');
-            cameraItem.classList.remove('failed', 'testing');
-            cameraItem.classList.add('failed');
-            status.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Skipped';
-            cameraItem.querySelector('.check-description').textContent = 'Video monitoring disabled';
-        }
-        
-        showToast('Camera test skipped. Video monitoring disabled.', 'warning');
-        checkAllPassed();
-    };
-    
-    document.getElementById('retryCameraTest').onclick = async () => {
-        showToast('Retrying camera detection...', 'info');
-        stopCameraTest();
-        
-        try {
-            const cameras = await detectAllCameras();
-            
-            if (cameras.length > 0) {
-                showToast(`${cameras.length} camera(s) detected`, 'success');
-            } else {
-                showToast('Still no camera detected', 'error');
-            }
-        } catch (error) {
-            showToast('Detection failed: ' + error.message, 'error');
-        }
-    };
-    
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-    
-    // Load cameras when modal opens
-    setTimeout(() => {
-        detectAllCameras();
-    }, 100);
-}
-
-function checkAllPassed() {
-    const allChecks = document.querySelectorAll('.check-item');
-    let allPassed = true;
-    
-    allChecks.forEach(check => {
-        if (!check.classList.contains('passed')) {
-            allPassed = false;
-        }
-    });
-    
-    const proceedBtn = document.getElementById('proceedToRegistration');
-    if (proceedBtn) {
-        proceedBtn.disabled = !allPassed;
-    }
-    
-    return allPassed;
-}
-
-// ===== ACCESS CODE VERIFICATION =====
-function verifyAccessCode() {
-    const accessCode = document.getElementById('accessCode').value.trim();
-    const errorElement = document.getElementById('accessError');
-    const ACCESS_CODE = "lfjc2025";
-    
-    if (errorElement) errorElement.style.display = 'none';
-    
-    if (accessCode === ACCESS_CODE) {
-        document.getElementById('accessDenied').style.display = 'none';
-        document.getElementById('systemCheckScreen').style.display = 'block';
-        
-        setTimeout(() => runSystemChecks(), 500);
-        
-        showToast('Access granted! Running system checks...', 'success');
-    } else {
-        if (errorElement) errorElement.style.display = 'block';
-        
-        const accessDenied = document.getElementById('accessDenied');
-        if (accessDenied) {
-            accessDenied.style.animation = 'none';
-            setTimeout(() => {
-                accessDenied.style.animation = 'shake 0.5s';
-            }, 10);
-        }
-        
-        const accessCodeInput = document.getElementById('accessCode');
-        if (accessCodeInput) {
-            accessCodeInput.value = '';
-            accessCodeInput.focus();
-        }
-    }
 }
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('LFJC Examination Platform Loaded');
+    // Load question bank
+    loadQuestionBank();
     
-    // Check deployment status
-    const deploymentStatus = checkDeploymentStatus();
-    console.log('Deployment status:', deploymentStatus);
+    // Setup event listeners
+    setupEventListeners();
     
-    // Show warning if not properly deployed
-    if (deploymentStatus.warning) {
-        showGitHubWarning();
-    }
+    // Setup drag and drop for admin
+    setupDragAndDrop();
     
-    // Setup access code verification
-    const accessCodeInput = document.getElementById('accessCode');
-    const verifyBtn = document.getElementById('verifyAccess');
+    // Setup bulk upload
+    setupBulkUpload();
     
-    if (accessCodeInput) {
-        accessCodeInput.focus();
+    // Show welcome message
+    showToast('Welcome to LFJC Examination Platform!', 'info');
+});
+
+function setupEventListeners() {
+    // Login buttons
+    document.getElementById('studentLoginBtn').addEventListener('click', startExam);
+    document.getElementById('adminLoginBtn').addEventListener('click', () => {
+        document.getElementById('adminLoginModal').style.display = 'flex';
+    });
+    
+    // Admin login
+    document.getElementById('loginAdminBtn').addEventListener('click', () => {
+        const username = document.getElementById('adminUsername').value;
+        const password = document.getElementById('adminPassword').value;
         
-        accessCodeInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                verifyAccessCode();
-            }
-        });
-    }
-    
-    if (verifyBtn) {
-        verifyBtn.addEventListener('click', verifyAccessCode);
-    }
-    
-    // Setup system check navigation
-    const goBackBtn = document.getElementById('goBackFromCheck');
-    if (goBackBtn) {
-        goBackBtn.addEventListener('click', function() {
-            document.getElementById('systemCheckScreen').style.display = 'none';
-            document.getElementById('accessDenied').style.display = 'flex';
-            if (accessCodeInput) accessCodeInput.focus();
-        });
-    }
-    
-    // Setup proceed button
-    const proceedBtn = document.getElementById('proceedToRegistration');
-    if (proceedBtn) {
-        proceedBtn.addEventListener('click', function() {
-            showToast('Proceeding to registration...', 'success');
-            // Add your registration logic here
-        });
-    }
-    
-    // Make check items clickable
-    document.getElementById('cameraCheckItem').addEventListener('click', function() {
-        if (this.classList.contains('failed')) {
-            showCameraTestModal();
+        if (username === 'admin' && password === 'lfjc2025') {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('adminLoginModal').style.display = 'none';
+            showToast('Admin login successful!', 'success');
+        } else {
+            showToast('Invalid admin credentials', 'error');
         }
     });
     
-    document.getElementById('micCheckItem').addEventListener('click', function() {
-        if (this.classList.contains('failed')) {
-            showMicrophoneTestModal();
-        }
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        document.getElementById('adminPanel').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        showToast('Logged out successfully', 'info');
     });
     
-    // GitHub deployment buttons
-    const deployButtons = ['deployToGitHubBtn', 'openGitHubBtn'];
-    deployButtons.forEach(btnId => {
-        const btn = document.getElementById(btnId);
-        if (btn) {
-            btn.addEventListener('click', function() {
-                window.open('https://github.com/new', '_blank');
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.dataset.tab;
+            
+            // Update active tab button
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+    
+    // Question type switching
+    document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const type = this.dataset.type;
+            
+            // Update active type button
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding editor
+            document.querySelectorAll('.question-editor').forEach(editor => {
+                editor.classList.add('hidden');
+            });
+            document.getElementById(`${type}-editor`).classList.remove('hidden');
+        });
+    });
+    
+    // MCQ options management
+    document.getElementById('addOptionBtn').addEventListener('click', function() {
+        const optionsContainer = document.getElementById('mcqOptions');
+        const optionCount = optionsContainer.children.length;
+        const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+        
+        if (optionCount < 6) {
+            const optionRow = document.createElement('div');
+            optionRow.className = 'option-row';
+            optionRow.innerHTML = `
+                <input type="radio" name="correctAnswer" value="${optionCount}">
+                <input type="text" class="option-input" placeholder="Option ${letters[optionCount]}">
+                <button class="remove-option"><i class="fas fa-times"></i></button>
+            `;
+            optionsContainer.appendChild(optionRow);
+            
+            // Add event listener to remove button
+            optionRow.querySelector('.remove-option').addEventListener('click', function() {
+                optionRow.remove();
             });
         }
     });
     
-    // Learn more button
-    const learnMoreBtn = document.getElementById('learnMoreBtn');
-    if (learnMoreBtn) {
-        learnMoreBtn.addEventListener('click', function() {
-            window.open('https://pages.github.com', '_blank');
+    // Save MCQ question
+    document.getElementById('saveMcqBtn').addEventListener('click', function() {
+        const questionText = document.getElementById('mcqQuestion').value.trim();
+        const subject = document.getElementById('mcqSubject').value;
+        const difficulty = document.getElementById('mcqDifficulty').value;
+        const explanation = document.getElementById('mcqExplanation').value.trim();
+        
+        // Get options
+        const optionInputs = document.querySelectorAll('.option-input');
+        const options = [];
+        optionInputs.forEach(input => {
+            if (input.value.trim()) {
+                options.push(input.value.trim());
+            }
         });
-    }
-    
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', function() {
-        if (microphoneDetector) {
-            microphoneDetector.cleanup();
+        
+        // Get correct answer
+        const correctRadio = document.querySelector('input[name="correctAnswer"]:checked');
+        const correctAnswer = correctRadio ? parseInt(correctRadio.value) : -1;
+        
+        if (!questionText) {
+            showToast('Please enter question text', 'error');
+            return;
         }
-        stopCameraTest();
+        
+        if (options.length < 2) {
+            showToast('Please add at least 2 options', 'error');
+            return;
+        }
+        
+        if (correctAnswer === -1) {
+            showToast('Please select correct answer', 'error');
+            return;
+        }
+        
+        // Add to question bank
+        const newQuestion = {
+            id: questionBank.length + 1,
+            type: 'mcq',
+            text: questionText,
+            options: options,
+            correctAnswer: correctAnswer,
+            subject: subject,
+            difficulty: difficulty,
+            explanation: explanation
+        };
+        
+        questionBank.push(newQuestion);
+        saveQuestionBank();
+        renderQuestionBank();
+        
+        // Clear form
+        document.getElementById('clearFormBtn').click();
+        
+        showToast('Question saved to bank!', 'success');
     });
     
-    // Show instructions for local file protocol
-    if (deploymentStatus.type === 'file-protocol') {
-        showToast('⚠️ Run this file on a local server for camera/microphone access. Use: python -m http.server 8000', 'warning', 10000);
-    }
-});
-
-// ===== UTILITY FUNCTIONS =====
-function getBrowserInfo() {
-    const ua = navigator.userAgent;
-    let browser = "Unknown";
-    let version = "Unknown";
+    // Clear form
+    document.getElementById('clearFormBtn').addEventListener('click', function() {
+        document.getElementById('mcqQuestion').value = '';
+        document.getElementById('mcqExplanation').value = '';
+        
+        // Clear options but keep first two
+        const optionsContainer = document.getElementById('mcqOptions');
+        const optionRows = optionsContainer.querySelectorAll('.option-row');
+        
+        optionRows.forEach((row, index) => {
+            if (index >= 2) {
+                row.remove();
+            } else {
+                const input = row.querySelector('.option-input');
+                input.value = '';
+                const radio = row.querySelector('input[type="radio"]');
+                radio.checked = false;
+            }
+        });
+    });
     
-    // Chrome
-    if (ua.indexOf("Chrome") > -1) {
-        browser = "Chrome";
-        const match = ua.match(/Chrome\/(\d+)/);
-        version = match ? match[1] : "Unknown";
-    }
-    // Firefox
-    else if (ua.indexOf("Firefox") > -1) {
-        browser = "Firefox";
-        const match = ua.match(/Firefox\/(\d+)/);
-        version = match ? match[1] : "Unknown";
-    }
-    // Safari
-    else if (ua.indexOf("Safari") > -1) {
-        browser = "Safari";
-        const match = ua.match(/Version\/(\d+)/);
-        version = match ? match[1] : "Unknown";
-    }
-    // Edge
-    else if (ua.indexOf("Edge") > -1) {
-        browser = "Edge";
-        const match = ua.match(/Edge\/(\d+)/);
-        version = match ? match[1] : "Unknown";
-    }
+    // Add drag items
+    document.getElementById('addDragItemBtn').addEventListener('click', function() {
+        const input = document.getElementById('newDragItem');
+        const value = input.value.trim();
+        
+        if (value) {
+            const itemsList = document.getElementById('dragItemsList');
+            const itemCount = itemsList.children.length;
+            
+            const dragItem = document.createElement('div');
+            dragItem.className = 'drag-item';
+            dragItem.draggable = true;
+            dragItem.dataset.id = itemCount + 1;
+            dragItem.textContent = value;
+            
+            // Add drag events
+            dragItem.addEventListener('dragstart', handleDragStart);
+            dragItem.addEventListener('dragend', handleDragEnd);
+            
+            itemsList.appendChild(dragItem);
+            input.value = '';
+            
+            showToast('Drag item added', 'success');
+        }
+    });
     
-    return { browser, version };
+    // Add targets
+    document.getElementById('addTargetBtn').addEventListener('click', function() {
+        const input = document.getElementById('newTargetLabel');
+        const value = input.value.trim();
+        
+        if (value) {
+            const targetsList = document.getElementById('dropTargetsList');
+            const targetCount = targetsList.children.length;
+            
+            const target = document.createElement('div');
+            target.className = 'drop-target';
+            target.dataset.targetId = targetCount + 1;
+            target.innerHTML = `<h5>${value}</h5>`;
+            
+            // Add drop events
+            target.addEventListener('dragover', handleDragOver);
+            target.addEventListener('dragenter', handleDragEnter);
+            target.addEventListener('dragleave', handleDragLeave);
+            target.addEventListener('drop', handleDrop);
+            
+            targetsList.appendChild(target);
+            input.value = '';
+            
+            showToast('Drop target added', 'success');
+        }
+    });
+    
+    // Save drag & drop question
+    document.getElementById('saveDDBtn').addEventListener('click', function() {
+        const questionText = document.getElementById('ddQuestion').value.trim();
+        const subject = document.getElementById('ddSubject').value;
+        
+        // Get drag items
+        const dragItems = [];
+        const dragElements = document.querySelectorAll('#dragItemsList .drag-item');
+        dragElements.forEach(item => {
+            dragItems.push(item.textContent);
+        });
+        
+        // Get targets
+        const targets = [];
+        const targetElements = document.querySelectorAll('#dropTargetsList .drop-target');
+        targetElements.forEach(target => {
+            const label = target.querySelector('h5').textContent;
+            targets.push({
+                id: target.dataset.targetId,
+                label: label
+            });
+        });
+        
+        if (!questionText) {
+            showToast('Please enter question text', 'error');
+            return;
+        }
+        
+        if (dragItems.length === 0) {
+            showToast('Please add drag items', 'error');
+            return;
+        }
+        
+        if (targets.length === 0) {
+            showToast('Please add drop targets', 'error');
+            return;
+        }
+        
+        if (Object.keys(currentMatches).length === 0) {
+            showToast('Please create matches by dragging items to targets', 'error');
+            return;
+        }
+        
+        // Add to question bank
+        const newQuestion = {
+            id: questionBank.length + 1,
+            type: 'dragdrop',
+            text: questionText,
+            dragItems: dragItems,
+            targets: targets,
+            correctMatches: { ...currentMatches },
+            subject: subject,
+            difficulty: 'medium'
+        };
+        
+        questionBank.push(newQuestion);
+        saveQuestionBank();
+        renderQuestionBank();
+        
+        showToast('Drag & Drop question saved!', 'success');
+    });
+    
+    // Parse bulk questions
+    document.getElementById('parseQuestionsBtn').addEventListener('click', function() {
+        const pasteBox = document.getElementById('pasteBox');
+        const text = pasteBox.textContent.trim();
+        
+        if (text && text !== 'Paste your questions here... (Copy from Excel, Word, or type directly)') {
+            parseBulkQuestions(text);
+        } else {
+            showToast('Please paste or type questions first', 'error');
+        }
+    });
+    
+    // Exam navigation
+    document.getElementById('prevQuestionBtn').addEventListener('click', () => {
+        if (currentQuestion > 0) {
+            loadQuestion(currentQuestion - 1);
+        }
+    });
+    
+    document.getElementById('nextQuestionBtn').addEventListener('click', () => {
+        if (currentQuestion < examQuestions.length - 1) {
+            loadQuestion(currentQuestion + 1);
+        }
+    });
+    
+    document.getElementById('markQuestionBtn').addEventListener('click', () => {
+        if (markedQuestions.has(currentQuestion)) {
+            markedQuestions.delete(currentQuestion);
+        } else {
+            markedQuestions.add(currentQuestion);
+        }
+        updateNavigation();
+        updateButtonStates();
+    });
+    
+    document.getElementById('submitExamBtn').addEventListener('click', showSubmissionModal);
+    document.getElementById('confirmSubmitBtn').addEventListener('click', submitExam);
+    
+    // Close modals
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.modal').style.display = 'none';
+        });
+    });
+    
+    // Close modal when clicking outside
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    });
 }
-
-// Log browser info for debugging
-console.log('Browser Info:', getBrowserInfo());
-console.log('Platform:', navigator.platform);
-console.log('User Agent:', navigator.userAgent);
 </script>
 </body>
 </html>
