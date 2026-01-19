@@ -54,6 +54,71 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ===== GITHUB DEPLOYMENT WARNING ===== */
+.github-warning {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+  color: white;
+  padding: 15px 25px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  z-index: 10001;
+  display: none;
+  max-width: 90%;
+  width: 500px;
+  text-align: center;
+  animation: slideDown 0.5s ease;
+}
+
+.github-warning-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.github-warning-text {
+  flex: 1;
+  text-align: left;
+}
+
+.github-warning-text h4 {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.github-warning-text p {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 5px;
+}
+
+.github-deploy-btn {
+  background: white;
+  color: #ff5722;
+  border: none;
+  padding: 8px 15px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.github-deploy-btn:hover {
+  background: #f5f5f5;
+  transform: translateY(-2px);
+}
+
+.github-deploy-btn i {
+  margin-right: 5px;
+}
+
 /* ===== MICROPHONE TEST MODAL ===== */
 .microphone-test-modal {
   position: fixed;
@@ -485,7 +550,7 @@ body {
 }
 
 .access-denied h1 {
-  font-size: 3em;
+  font-size: 2.5em;
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
@@ -529,6 +594,84 @@ body {
   padding: 10px 20px;
   border-radius: var(--radius-md);
   animation: shake 0.5s;
+}
+
+.github-deployment-info {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 30px;
+  max-width: 500px;
+  text-align: left;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.github-deployment-info h3 {
+  color: white;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.github-deployment-info ol {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.github-deployment-info li {
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.github-deployment-info code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #FFD700;
+}
+
+.github-action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.github-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.github-btn-primary {
+  background: white;
+  color: #24292e;
+}
+
+.github-btn-primary:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.github-btn-secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.github-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 @keyframes shake {
@@ -608,11 +751,52 @@ body {
   .mic-test-controls {
     flex-direction: column;
   }
+  
+  .access-denied h1 {
+    font-size: 2em;
+  }
+  
+  .github-deployment-info {
+    margin: 20px;
+    padding: 15px;
+  }
+  
+  .github-action-buttons {
+    flex-direction: column;
+  }
+  
+  .github-warning {
+    width: 95%;
+    padding: 12px 15px;
+  }
+  
+  .github-warning-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .github-warning-text {
+    text-align: center;
+  }
 }
 </style>
 </head>
 
 <body>
+
+<!-- GitHub Deployment Warning -->
+<div id="githubWarning" class="github-warning">
+  <div class="github-warning-content">
+    <div class="github-warning-text">
+      <h4><i class="fas fa-exclamation-triangle"></i> Camera/Microphone Access Required</h4>
+      <p>This platform requires camera and microphone access for proctoring.</p>
+      <p style="font-size: 12px;">Upload to GitHub Pages to enable these features.</p>
+    </div>
+    <button id="deployToGitHubBtn" class="github-deploy-btn">
+      <i class="fab fa-github"></i> Deploy Now
+    </button>
+  </div>
+</div>
 
 <!-- Microphone Test Modal -->
 <div id="microphoneTestModal" class="microphone-test-modal">
@@ -675,14 +859,33 @@ body {
     <h1>LFJC ONLINE EXAMINATION</h1>
     <p style="font-size: 1.2em; margin: 10px 0;">TOTAL 75 QUESTIONS</p>
     <p style="margin: 5px 0;">• Maths: 20 (MCQ), 5 (Numerical Input)</p>
-    <p style="margin: 5px 0;">• Physics: 20 (MCQ), 5(Numerical Input)</p>
+    <p style="margin: 5px 0;">• Physics: 20 (MCQ), 5 (Numerical Input)</p>
     <p style="margin: 5px 0;">• Chemistry: 20 (MCQ), 5 (Numerical Input)</p>
     <p style="margin: 10px 0; font-weight: bold;">CORRECT ANSWER + 4 MARKS</p>
     <p style="margin: 5px 0; font-weight: bold;">WRONG ANSWER -1 MARK</p>
     
-    <input type="password" id="accessCode" class="access-code-input" placeholder="Enter Access Code">
+    <input type="password" id="accessCode" class="access-code-input" placeholder="Enter Access Code (lfjc2025)">
     <button id="verifyAccess" class="verify-btn">VERIFY ACCESS</button>
     <div id="accessError" class="access-error">❌ Invalid access code. Please try again.</div>
+    
+    <!-- GitHub Deployment Instructions -->
+    <div class="github-deployment-info">
+      <h3><i class="fab fa-github"></i> Deploy on GitHub Pages</h3>
+      <ol>
+        <li>Create repository on GitHub</li>
+        <li>Upload this file as <code>index.html</code></li>
+        <li>Go to Settings → Pages → Select "main" branch</li>
+        <li>Access via: <code>https://username.github.io/repository/</code></li>
+      </ol>
+      <div class="github-action-buttons">
+        <button id="openGitHubBtn" class="github-btn github-btn-primary">
+          <i class="fab fa-github"></i> Create GitHub Repository
+        </button>
+        <button id="learnMoreBtn" class="github-btn github-btn-secondary">
+          <i class="fas fa-book"></i> Learn More
+        </button>
+      </div>
+    </div>
 </div>
 
 <!-- System Check Screen -->
@@ -703,6 +906,17 @@ body {
         <div class="check-content">
           <div class="check-title">Web Browser Compatibility</div>
           <div class="check-description">Chrome 80+ recommended for best experience</div>
+        </div>
+        <div class="check-status">Checking...</div>
+      </div>
+      
+      <div class="check-item" id="deploymentCheckItem">
+        <div class="check-icon">
+          <i class="fab fa-github"></i>
+        </div>
+        <div class="check-content">
+          <div class="check-title">GitHub Pages Deployment</div>
+          <div class="check-description">Required for camera/microphone access</div>
         </div>
         <div class="check-status">Checking...</div>
       </div>
@@ -739,17 +953,6 @@ body {
         </div>
         <div class="check-status">Checking...</div>
       </div>
-      
-      <div class="check-item" id="screenCheckItem">
-        <div class="check-icon">
-          <i class="fas fa-desktop"></i>
-        </div>
-        <div class="check-content">
-          <div class="check-title">Screen Resolution</div>
-          <div class="check-description">Minimum 1024x768 recommended</div>
-        </div>
-        <div class="check-status">Checking...</div>
-      </div>
     </div>
     
     <div style="display: flex; gap: 15px; margin-top: 30px;">
@@ -764,6 +967,68 @@ body {
 </div>
 
 <script>
+// ===== GITHUB DEPLOYMENT FUNCTIONS =====
+function checkDeploymentStatus() {
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    const isHTTPS = window.location.protocol === 'https:';
+    const isLocalhost = window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1';
+    const isFileProtocol = window.location.protocol === 'file:';
+    
+    if (isGitHubPages) {
+        return { 
+            type: 'github-pages',
+            passed: true,
+            message: 'Deployed on GitHub Pages',
+            url: window.location.href
+        };
+    } else if (isHTTPS && !isGitHubPages) {
+        return { 
+            type: 'https',
+            passed: true,
+            message: 'Running on HTTPS',
+            url: window.location.href
+        };
+    } else if (isLocalhost) {
+        return { 
+            type: 'localhost',
+            passed: true,
+            message: 'Running on local server',
+            url: window.location.href
+        };
+    } else if (isFileProtocol) {
+        return { 
+            type: 'file-protocol',
+            passed: false,
+            message: 'Running locally (file://) - Camera/Mic disabled'
+        };
+    } else {
+        return { 
+            type: 'http',
+            passed: false,
+            message: 'Running on HTTP - Camera/Mic disabled'
+        };
+    }
+}
+
+function showGitHubWarning() {
+    const deploymentStatus = checkDeploymentStatus();
+    
+    if (!deploymentStatus.passed) {
+        const warning = document.getElementById('githubWarning');
+        warning.style.display = 'block';
+        
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+            warning.style.opacity = '0';
+            warning.style.transform = 'translate(-50%, -100%)';
+            setTimeout(() => {
+                warning.style.display = 'none';
+            }, 500);
+        }, 10000);
+    }
+}
+
 // ===== HEADPHONE MICROPHONE DETECTOR =====
 class HeadphoneMicrophoneDetector {
     constructor() {
@@ -777,17 +1042,14 @@ class HeadphoneMicrophoneDetector {
         this.animationId = null;
         
         // Constants
-        this.VOLUME_THRESHOLD = 0.02;    // Minimum volume for "working" mic
-        this.GOOD_VOLUME = 0.05;         // Good volume level
-        this.GREAT_VOLUME = 0.1;         // Great volume level
-        
-        // Frequency bands for visualization
+        this.VOLUME_THRESHOLD = 0.02;
+        this.GOOD_VOLUME = 0.05;
+        this.GREAT_VOLUME = 0.1;
         this.frequencyBins = 256;
     }
     
     async initialize() {
         try {
-            // Create audio context (compatible with all browsers)
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
             this.audioContext = new AudioContext();
             
@@ -804,10 +1066,8 @@ class HeadphoneMicrophoneDetector {
     
     async detectAllAudioDevices() {
         try {
-            // First, get microphone permission
             await this.requestMicrophonePermission();
             
-            // Enumerate all devices
             const allDevices = await navigator.mediaDevices.enumerateDevices();
             this.devices = allDevices.filter(device => 
                 device.kind === 'audioinput' && 
@@ -817,8 +1077,6 @@ class HeadphoneMicrophoneDetector {
             );
             
             console.log('Found audio devices:', this.devices);
-            
-            // Display devices in UI
             this.displayDevices();
             
             return this.devices;
@@ -831,9 +1089,6 @@ class HeadphoneMicrophoneDetector {
     
     async requestMicrophonePermission() {
         try {
-            // Try different constraint strategies for headphone mics
-            
-            // Strategy 1: Very permissive (works with most headsets)
             const constraints1 = {
                 audio: {
                     echoCancellation: false,
@@ -843,10 +1098,8 @@ class HeadphoneMicrophoneDetector {
                 }
             };
             
-            // Strategy 2: Empty constraints
             const constraints2 = { audio: true };
             
-            // Strategy 3: Specific for USB headsets
             const constraints3 = {
                 audio: {
                     sampleRate: 44100,
@@ -857,13 +1110,11 @@ class HeadphoneMicrophoneDetector {
             
             let stream = null;
             
-            // Try each strategy
             for (const constraints of [constraints1, constraints2, constraints3]) {
                 try {
                     stream = await navigator.mediaDevices.getUserMedia(constraints);
                     console.log('Microphone permission granted with constraints:', constraints);
                     
-                    // Stop the test stream
                     stream.getTracks().forEach(track => track.stop());
                     
                     return true;
@@ -894,7 +1145,6 @@ class HeadphoneMicrophoneDetector {
             const deviceItem = document.createElement('div');
             deviceItem.className = 'device-item';
             
-            // Determine if this is likely a headset
             const isHeadset = this.isLikelyHeadset(device.label || '');
             const headsetIcon = isHeadset ? '🎧' : '🎤';
             
@@ -927,15 +1177,12 @@ class HeadphoneMicrophoneDetector {
     
     async startTest(deviceId = null) {
         try {
-            // Stop any existing test
             this.stopTest();
             
-            // Initialize audio context if needed
             if (!this.audioContext) {
                 await this.initialize();
             }
             
-            // Prepare constraints
             const constraints = {
                 audio: {
                     deviceId: deviceId ? { exact: deviceId } : undefined,
@@ -947,13 +1194,8 @@ class HeadphoneMicrophoneDetector {
                 }
             };
             
-            // Get microphone stream
             this.audioStream = await navigator.mediaDevices.getUserMedia(constraints);
-            
-            // Setup audio analysis
             this.setupAudioAnalysis();
-            
-            // Start visualization
             this.startVisualization();
             
             this.isTesting = true;
@@ -962,7 +1204,6 @@ class HeadphoneMicrophoneDetector {
         } catch (error) {
             console.error('Microphone test failed:', error);
             
-            // Try fallback constraints
             try {
                 console.log('Trying fallback constraints...');
                 this.audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -981,16 +1222,13 @@ class HeadphoneMicrophoneDetector {
     setupAudioAnalysis() {
         if (!this.audioStream || !this.audioContext) return;
         
-        // Create analyser
         this.analyser = this.audioContext.createAnalyser();
         this.analyser.fftSize = this.frequencyBins;
         this.analyser.smoothingTimeConstant = 0.8;
         
-        // Create microphone source
         this.microphone = this.audioContext.createMediaStreamSource(this.audioStream);
         this.microphone.connect(this.analyser);
         
-        // Prepare data array for frequency analysis
         this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
     }
     
@@ -1000,7 +1238,6 @@ class HeadphoneMicrophoneDetector {
         const levelBar = document.getElementById('micLevelIndicator');
         const volumeDisplay = document.getElementById('micVolumeLevel');
         
-        // Set canvas dimensions
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
         
@@ -1011,23 +1248,19 @@ class HeadphoneMicrophoneDetector {
             
             this.animationId = requestAnimationFrame(draw);
             
-            // Get frequency data
             this.analyser.getByteFrequencyData(this.dataArray);
             
-            // Calculate volume (average of frequency data)
             let sum = 0;
             for (let i = 0; i < this.dataArray.length; i++) {
                 sum += this.dataArray[i];
             }
             const average = sum / this.dataArray.length;
-            const volume = average / 255; // Normalize to 0-1
+            const volume = average / 255;
             
-            // Update volume display
             if (volumeDisplay) {
                 const percent = Math.round(volume * 100);
                 volumeDisplay.textContent = `${percent}%`;
                 
-                // Color based on volume
                 if (volume > this.GREAT_VOLUME) {
                     volumeDisplay.style.color = '#36B37E';
                 } else if (volume > this.GOOD_VOLUME) {
@@ -1039,12 +1272,10 @@ class HeadphoneMicrophoneDetector {
                 }
             }
             
-            // Update level bar
             if (levelBar) {
-                const heightPercent = Math.min(volume * 300, 100); // Amplify for visibility
+                const heightPercent = Math.min(volume * 300, 100);
                 levelBar.style.height = `${heightPercent}%`;
                 
-                // Color based on volume
                 if (volume > this.GREAT_VOLUME) {
                     levelBar.style.background = 'linear-gradient(to top, #36B37E, #00C9A7)';
                 } else if (volume > this.GOOD_VOLUME) {
@@ -1056,7 +1287,6 @@ class HeadphoneMicrophoneDetector {
                 }
             }
             
-            // Draw frequency bars
             this.drawFrequencyBars(ctx, canvas.width, canvas.height);
         };
         
@@ -1074,7 +1304,6 @@ class HeadphoneMicrophoneDetector {
         for (let i = 0; i < this.dataArray.length; i++) {
             const barHeight = (this.dataArray[i] / 255) * height;
             
-            // Create gradient
             const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height);
             
             if (barHeight > height * 0.7) {
@@ -1121,7 +1350,6 @@ class HeadphoneMicrophoneDetector {
             this.analyser = null;
         }
         
-        // Clear visualizations
         const canvas = document.getElementById('micFrequencyCanvas');
         if (canvas) {
             const ctx = canvas.getContext('2d');
@@ -1147,15 +1375,13 @@ class HeadphoneMicrophoneDetector {
             return { success: false, message: 'No microphones detected' };
         }
         
-        // Test each device
         for (const device of devices) {
             console.log(`Testing device: ${device.label || device.deviceId}`);
             
             const success = await this.startTest(device.deviceId);
             
             if (success) {
-                // Check if it actually captures audio
-                const hasAudio = await this.checkForAudio(2000); // Check for 2 seconds
+                const hasAudio = await this.checkForAudio(2000);
                 
                 if (hasAudio) {
                     this.showToast(`✓ Microphone working: ${device.label || 'Device'}`, 'success');
@@ -1247,7 +1473,6 @@ function showToast(message, type = 'info', duration = 5000) {
     
     container.appendChild(toast);
     
-    // Auto remove
     setTimeout(() => {
         toast.style.animation = 'slideOutRight 0.3s ease';
         setTimeout(() => {
@@ -1257,7 +1482,6 @@ function showToast(message, type = 'info', duration = 5000) {
         }, 300);
     }, duration);
     
-    // Close button
     toast.querySelector('.toast-close').addEventListener('click', () => {
         toast.style.animation = 'slideOutRight 0.3s ease';
         setTimeout(() => {
@@ -1276,10 +1500,10 @@ async function runSystemChecks() {
     
     const checks = [
         { id: 'browserCheckItem', test: checkBrowserCompatibility },
+        { id: 'deploymentCheckItem', test: checkDeployment },
         { id: 'cameraCheckItem', test: checkCameraAccess },
         { id: 'micCheckItem', test: checkMicrophoneAccess },
-        { id: 'networkCheckItem', test: checkNetworkStability },
-        { id: 'screenCheckItem', test: checkScreenResolution }
+        { id: 'networkCheckItem', test: checkNetworkStability }
     ];
     
     let allPassed = true;
@@ -1289,7 +1513,6 @@ async function runSystemChecks() {
         const element = document.getElementById(check.id);
         const status = element.querySelector('.check-status');
         
-        // Show testing state
         element.classList.remove('passed', 'failed');
         element.classList.add('testing');
         status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
@@ -1315,7 +1538,6 @@ async function runSystemChecks() {
                     element.querySelector('.check-description').textContent = result.message;
                 }
                 
-                // Special handling for microphone
                 if (check.id === 'micCheckItem' && result.canTest) {
                     setTimeout(() => showMicrophoneTestModal(), 1000);
                 }
@@ -1328,13 +1550,11 @@ async function runSystemChecks() {
             allPassed = false;
         }
         
-        // Small delay between checks
         if (i < checks.length - 1) {
             await new Promise(resolve => setTimeout(resolve, 800));
         }
     }
     
-    // Update proceed button
     document.getElementById('proceedToRegistration').disabled = !allPassed;
     
     return allPassed;
@@ -1351,8 +1571,26 @@ async function checkBrowserCompatibility() {
     };
 }
 
+async function checkDeployment() {
+    const deploymentStatus = checkDeploymentStatus();
+    
+    return {
+        passed: deploymentStatus.passed,
+        message: deploymentStatus.message
+    };
+}
+
 async function checkCameraAccess() {
     try {
+        const deploymentStatus = checkDeploymentStatus();
+        
+        if (!deploymentStatus.passed) {
+            return { 
+                passed: false, 
+                message: 'Deploy to GitHub Pages for camera access' 
+            };
+        }
+        
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             return { passed: false, message: 'Camera API not supported' };
         }
@@ -1362,6 +1600,7 @@ async function checkCameraAccess() {
         
         return { passed: true, message: 'Camera accessible' };
     } catch (error) {
+        console.error('Camera check failed:', error);
         return { 
             passed: false, 
             message: 'Camera access denied or not available' 
@@ -1371,10 +1610,22 @@ async function checkCameraAccess() {
 
 async function checkMicrophoneAccess() {
     try {
-        // Initialize detector
+        const deploymentStatus = checkDeploymentStatus();
+        
+        if (!deploymentStatus.passed) {
+            return { 
+                passed: false, 
+                canTest: false,
+                message: 'Deploy to GitHub Pages for microphone access'
+            };
+        }
+        
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            return { passed: false, message: 'Microphone API not supported' };
+        }
+        
         microphoneDetector = new HeadphoneMicrophoneDetector();
         
-        // First try quick test
         const hasPermission = await microphoneDetector.requestMicrophonePermission();
         if (!hasPermission) {
             return { 
@@ -1384,7 +1635,6 @@ async function checkMicrophoneAccess() {
             };
         }
         
-        // Detect devices
         const devices = await microphoneDetector.detectAllAudioDevices();
         if (devices.length === 0) {
             return { 
@@ -1394,7 +1644,6 @@ async function checkMicrophoneAccess() {
             };
         }
         
-        // Quick test of first device
         const testResult = await microphoneDetector.testAllDevices();
         
         if (testResult.success) {
@@ -1416,8 +1665,8 @@ async function checkMicrophoneAccess() {
         console.error('Microphone check failed:', error);
         return { 
             passed: false, 
-            canTest: true,
-            message: 'Microphone check failed. Click to test.' 
+            canTest: false,
+            message: 'Microphone check failed' 
         };
     }
 }
@@ -1427,7 +1676,6 @@ async function checkNetworkStability() {
         return { passed: false, message: 'No internet connection' };
     }
     
-    // Try to measure connection if supported
     if (navigator.connection) {
         const connection = navigator.connection;
         const downlink = connection.downlink || 0;
@@ -1439,20 +1687,7 @@ async function checkNetworkStability() {
         };
     }
     
-    // Fallback
     return { passed: true, message: 'Network connected' };
-}
-
-async function checkScreenResolution() {
-    const width = window.screen.width * window.devicePixelRatio;
-    const height = window.screen.height * window.devicePixelRatio;
-    
-    const meetsRequirement = width >= 1024 && height >= 768;
-    
-    return {
-        passed: meetsRequirement,
-        message: `Resolution: ${Math.round(width)}x${Math.round(height)}`
-    };
 }
 
 // ===== MICROPHONE TEST MODAL FUNCTIONS =====
@@ -1460,7 +1695,6 @@ function showMicrophoneTestModal() {
     const modal = document.getElementById('microphoneTestModal');
     modal.style.display = 'flex';
     
-    // Initialize detector if needed
     if (!microphoneDetector) {
         microphoneDetector = new HeadphoneMicrophoneDetector();
     }
@@ -1471,13 +1705,11 @@ function showMicrophoneTestModal() {
 function setupMicrophoneTestModal() {
     const modal = document.getElementById('microphoneTestModal');
     
-    // Start test button
     document.getElementById('startMicTest').onclick = async () => {
         try {
             document.getElementById('startMicTest').disabled = true;
             document.getElementById('stopMicTest').disabled = false;
             
-            // Detect and test all devices
             const result = await microphoneDetector.testAllDevices();
             
             if (!result.success) {
@@ -1496,7 +1728,6 @@ function setupMicrophoneTestModal() {
         }
     };
     
-    // Stop test button
     document.getElementById('stopMicTest').onclick = () => {
         microphoneDetector.stopTest();
         document.getElementById('stopMicTest').disabled = true;
@@ -1504,7 +1735,6 @@ function setupMicrophoneTestModal() {
         showToast('Microphone test stopped', 'info');
     };
     
-    // Skip test button
     document.getElementById('skipMicTest').onclick = () => {
         if (microphoneDetector) {
             microphoneDetector.cleanup();
@@ -1512,7 +1742,6 @@ function setupMicrophoneTestModal() {
         
         modal.style.display = 'none';
         
-        // Update system check item
         const micItem = document.getElementById('micCheckItem');
         const status = micItem.querySelector('.check-status');
         
@@ -1523,17 +1752,14 @@ function setupMicrophoneTestModal() {
         showToast('Microphone test skipped. Audio monitoring disabled.', 'warning');
     };
     
-    // Retry detection button
     document.getElementById('retryMicTest').onclick = async () => {
         if (microphoneDetector) {
             microphoneDetector.cleanup();
         }
         
-        // Re-run microphone check
         const result = await checkMicrophoneAccess();
         
         if (result.passed) {
-            // Update UI
             const micItem = document.getElementById('micCheckItem');
             const status = micItem.querySelector('.check-status');
             
@@ -1544,14 +1770,12 @@ function setupMicrophoneTestModal() {
             modal.style.display = 'none';
             showToast('Microphone detected successfully!', 'success');
             
-            // Re-enable proceed button
             checkAllPassed();
         } else {
             showToast('Still no microphone detected. Click "Skip Test" to proceed.', 'error');
         }
     };
     
-    // Close modal when clicking outside
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.style.display = 'none';
@@ -1577,41 +1801,58 @@ function checkAllPassed() {
 function verifyAccessCode() {
     const accessCode = document.getElementById('accessCode').value.trim();
     const errorElement = document.getElementById('accessError');
-    const ACCESS_CODE = "lfjc2025"; // Your access code
+    const ACCESS_CODE = "lfjc2025";
     
     errorElement.style.display = 'none';
     
     if (accessCode === ACCESS_CODE) {
-        // Success - show system check
         document.getElementById('accessDenied').style.display = 'none';
         document.getElementById('systemCheckScreen').style.display = 'block';
         
-        // Run system checks
         setTimeout(() => runSystemChecks(), 500);
         
         showToast('Access granted! Running system checks...', 'success');
     } else {
-        // Show error
         errorElement.style.display = 'block';
         
-        // Shake animation
         const accessDenied = document.getElementById('accessDenied');
         accessDenied.style.animation = 'none';
         setTimeout(() => {
             accessDenied.style.animation = 'shake 0.5s';
         }, 10);
         
-        // Clear input
         document.getElementById('accessCode').value = '';
         document.getElementById('accessCode').focus();
     }
 }
 
+// ===== GITHUB BUTTONS =====
+document.getElementById('deployToGitHubBtn')?.addEventListener('click', () => {
+    window.open('https://github.com/new', '_blank');
+});
+
+document.getElementById('openGitHubBtn')?.addEventListener('click', () => {
+    window.open('https://github.com/new', '_blank');
+});
+
+document.getElementById('learnMoreBtn')?.addEventListener('click', () => {
+    window.open('https://pages.github.com', '_blank');
+});
+
 // ===== INITIALIZATION =====
 window.addEventListener('load', function() {
-    console.log('LFJC Examination Platform with Headphone Microphone Detection Loaded');
+    console.log('LFJC Examination Platform Loaded');
     
-    // Show access denied screen
+    // Check deployment status
+    const deploymentStatus = checkDeploymentStatus();
+    console.log('Deployment status:', deploymentStatus);
+    
+    // Show warning if not properly deployed
+    if (!deploymentStatus.passed) {
+        showGitHubWarning();
+    }
+    
+    // Show access screen
     document.getElementById('accessDenied').style.display = 'flex';
     document.getElementById('systemCheckScreen').style.display = 'none';
     
@@ -1633,7 +1874,6 @@ window.addEventListener('load', function() {
         document.getElementById('accessCode').focus();
     });
     
-    // Proceed to registration (placeholder)
     document.getElementById('proceedToRegistration').addEventListener('click', function() {
         showToast('Proceeding to registration...', 'success');
         // Add your registration logic here
@@ -1646,40 +1886,6 @@ window.addEventListener('load', function() {
         }
     });
 });
-
-// ===== UTILITY FUNCTIONS =====
-function getBrowserInfo() {
-    const ua = navigator.userAgent;
-    let browser = "Unknown";
-    let version = "Unknown";
-    
-    // Detect Chrome
-    if (ua.indexOf("Chrome") > -1) {
-        browser = "Chrome";
-        const match = ua.match(/Chrome\/(\d+)/);
-        if (match) version = match[1];
-    }
-    // Detect Firefox
-    else if (ua.indexOf("Firefox") > -1) {
-        browser = "Firefox";
-        const match = ua.match(/Firefox\/(\d+)/);
-        if (match) version = match[1];
-    }
-    // Detect Safari
-    else if (ua.indexOf("Safari") > -1) {
-        browser = "Safari";
-        const match = ua.match(/Version\/(\d+)/);
-        if (match) version = match[1];
-    }
-    // Detect Edge
-    else if (ua.indexOf("Edg") > -1) {
-        browser = "Edge";
-        const match = ua.match(/Edg\/(\d+)/);
-        if (match) version = match[1];
-    }
-    
-    return { browser, version };
-}
 </script>
 </body>
 </html>
